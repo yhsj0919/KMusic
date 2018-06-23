@@ -20,4 +20,9 @@ interface Impl {
      */
     fun getLrcById(songId: String): String
 
+    /**
+     * 根据类型,获取歌曲排行榜
+     */
+    fun getSongTop(topType: String, page: Int = 1, num: Int = 10): String
+
 }

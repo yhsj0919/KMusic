@@ -10,6 +10,16 @@ import xyz.yhsj.kmusic.entity.Song
  * 解析
  */
 object QQImpl : Impl {
+    /**
+     * 根据类型,获取歌曲排行榜
+     */
+    override fun getSongTop(topType: String, page: Int, num: Int): String {
+        //https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?tpl=3&page=detail&date=2018-06-22&topid=4&type=top&song_begin=0&song_num=10&g_tk=941575090&jsonpCallback=MusicJsonCallbacktoplist&loginUin=1130402124&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+        //排行榜详情
+        //https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?date=2018-06-22&topid=4&type=top&song_begin=0&song_num=10&format=jsonp&inCharset=utf8&outCharset=utf-8
+        //https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_opt.fcg?page=index&format=html&v8debug=1  排行榜首页地址
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {

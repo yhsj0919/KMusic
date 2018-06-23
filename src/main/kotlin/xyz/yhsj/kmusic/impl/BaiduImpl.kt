@@ -12,6 +12,16 @@ import xyz.yhsj.kmusic.entity.Song
  */
 
 object BaiduImpl : Impl {
+    /**
+     * 根据类型,获取歌曲排行榜
+     */
+    override fun getSongTop(topType: String, page: Int, num: Int): String {
+        //榜单接口 METHOD_GET_MUSIC_LIST
+        //http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billCategory&format=json
+        //http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&query=$key&type=1&size=10&offset=0
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
             val resp = get(url = "http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.search.common&format=json&query=$key&page_no=$page&page_size=$num"

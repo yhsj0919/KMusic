@@ -11,6 +11,13 @@ import xyz.yhsj.kmusic.entity.Song
  * 网易云音乐解析
  */
 object NeteaseImpl : Impl {
+    /**
+     * 根据类型,获取歌曲排行榜
+     */
+    override fun getSongTop(topType: String, page: Int, num: Int): String {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
             val resp = post(url = "http://music.163.com/api/cloudsearch/pc",

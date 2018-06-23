@@ -10,6 +10,13 @@ import xyz.yhsj.kmusic.utils.future
  * 咪咕音乐
  */
 object MiguImpl : Impl {
+    /**
+     * 根据类型,获取歌曲排行榜
+     */
+    override fun getSongTop(topType: String, page: Int, num: Int): String {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     /**@param key 关键字
      * @param page 页数
      * 搜索

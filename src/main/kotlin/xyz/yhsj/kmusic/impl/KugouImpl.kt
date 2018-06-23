@@ -10,6 +10,15 @@ import xyz.yhsj.kmusic.utils.future
  * 酷狗解析
  */
 object KugouImpl : Impl {
+    /**
+     * 根据类型,获取歌曲排行榜
+     */
+    override fun getSongTop(topType: String, page: Int, num: Int): String {
+        //http://mobilecdn.kugou.com/api/v3/rank/list?plat=0&withsong=1
+        //http://m.kugou.com/rank/info/6666&json=true
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
             val resp = get(url = "http://mobilecdn.kugou.com/api/v3/search/song?keyword=$key&format=json&page=$page&pagesize=$num"

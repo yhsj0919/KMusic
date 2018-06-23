@@ -10,6 +10,106 @@ import xyz.yhsj.kmusic.utils.DecodeKaiserMatrix
  * 虾米解析
  */
 object XiamiImpl : Impl {
+    /**
+     * 根据类型,获取歌曲排行榜
+     */
+    override fun getSongTop(topType: String, page: Int, num: Int): String {
+
+       /** [{
+            id: 101,
+            name: "虾米音乐榜",
+            logo: "//gw.alicdn.com/tps/i1/T19LocFghXXXXsGF3s-640-640.png",
+            gmt_modify: i
+        }, {
+            id: 103,
+            name: "虾米原创榜",
+            logo: "//gw.alicdn.com/tps/i1/T1qMgSFlxkXXXsGF3s-640-640.png",
+            gmt_modify: i
+        }, {
+            id: 1,
+            name: "Hito中文排行榜",
+            logo: "//img.alicdn.com/tps/TB1RTkfNVXXXXXdXFXXXXXXXXXX-290-290.png",
+            gmt_modify: i
+        }, {
+            id: 2,
+            name: "香港劲歌金榜",
+            logo: "//img.alicdn.com/tps/TB1GMQvNVXXXXbwXXXXXXXXXXXX-290-290.png",
+            gmt_modify: i
+        }, {
+            id: 3,
+            name: "英国UK单曲榜",
+            logo: "//img.alicdn.com/tps/TB11FsrNVXXXXabXpXXXXXXXXXX-290-290.png",
+            gmt_modify: i
+        }, {
+            id: 4,
+            name: "Billboard单曲榜",
+            logo: "//img.alicdn.com/tps/TB1EqgvNVXXXXbPXXXXXXXXXXXX-290-290.png",
+            gmt_modify: i
+        }, {
+            id: 5,
+            name: "Oricon公信单曲榜",
+            logo: "//img.alicdn.com/tps/TB17O3cNVXXXXa0XFXXXXXXXXXX-290-290.png",
+            gmt_modify: i
+        }, {
+            id: 6,
+            name: "M-net综合数据周榜",
+            logo: "//img.alicdn.com/tps/TB1K.ErNVXXXXXcXpXXXXXXXXXX-290-290.png",
+            gmt_modify: i
+        }, {
+            id: 106,
+            name: "陌陌试听榜",
+            logo: "//img.alicdn.com/tps/TB1nUn_NVXXXXX4XVXXXXXXXXXX-330-330.png",
+            gmt_modify: i
+        }, {
+            id: 31,
+            name: "音乐风云榜",
+            logo: "//img.alicdn.com/tps/TB1nmf7NVXXXXbFXVXXXXXXXXXX-330-330.png",
+            gmt_modify: i
+        }, {
+            id: 10011,
+            name: "微信分享榜",
+            logo: "//img.alicdn.com/tps/TB1mrUbNVXXXXaFXVXXXXXXXXXX-330-330.png",
+            gmt_modify: i
+        }, {
+            id: 10012,
+            name: "微博分享榜",
+            logo: "//img.alicdn.com/tps/TB1h1oaNVXXXXXrXVXXXXXXXXXX-330-330.png",
+            gmt_modify: i
+        }, {
+            id: 10013,
+            name: "大虾试听榜",
+            logo: "//img.alicdn.com/tps/TB1tK7cNVXXXXXgXVXXXXXXXXXX-330-330.png",
+            gmt_modify: i
+        }, {
+            id: 10014,
+            name: "歌单收录榜",
+            logo: "//img.alicdn.com/tps/TB1KQseNVXXXXbfXFXXXXXXXXXX-330-330.png",
+            gmt_modify: i
+        }]**/
+
+//http://api.xiami.com/web?v=2.0&app_key=1&id=101&page=2&limit=20&_ksTS=1529740218689_96&callback=jsonp97&r=rank/song-list
+        return try {
+            val resp = get(url = "http://api.xiami.com/web?v=2.0&app_key=1&id=101&page=1&limit=10&r=rank/song-list"
+                    , headers = mapOf("Referer" to "http://m.xiami.com",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                println("请求失败")
+                "请求失败"
+            } else {
+                val radioData = resp.text
+
+
+                radioData
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("请求失败")
+            "请求失败"
+        }
+
+    }
+
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
             val resp = get(url = "http://api.xiami.com/web?key=$key&v=2.0&app_key=1&r=search/songs&page=$page&limit=$num"

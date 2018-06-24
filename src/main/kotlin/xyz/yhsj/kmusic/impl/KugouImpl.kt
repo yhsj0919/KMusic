@@ -3,6 +3,7 @@ package xyz.yhsj.kmusic.impl
 import xyz.yhsj.json.JSONObject
 import xyz.yhsj.khttp.get
 import xyz.yhsj.kmusic.entity.MusicResp
+import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.utils.future
 
@@ -11,9 +12,16 @@ import xyz.yhsj.kmusic.utils.future
  */
 object KugouImpl : Impl {
     /**
-     * 根据类型,获取歌曲排行榜
+     * 根据类型,获取歌曲排行榜详情
      */
-    override fun getSongTop(topType: String, page: Int, num: Int): String {
+    override fun getSongTopDetail(topType: String, page: Int, num: Int): MusicResp<List<Song>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * 获取歌曲排行榜
+     */
+    override fun getSongTop(): MusicResp<List<MusicTop>> {
         //http://mobilecdn.kugou.com/api/v3/rank/list?plat=0&withsong=1
         //http://m.kugou.com/rank/info/6666&json=true
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -76,7 +84,7 @@ object KugouImpl : Impl {
                                         "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
                         if (songResp.statusCode != 200) {
                             Song(
-                                    type = "kugou",
+                                    site = "kugou",
                                     code = songResp.statusCode,
                                     msg = "网络异常",
                                     songid = songId)
@@ -88,7 +96,7 @@ object KugouImpl : Impl {
                             if (url.isNullOrEmpty()) {
                                 val privilege = songInfo.getInt("privilege")
                                 Song(
-                                        type = "kugou",
+                                        site = "kugou",
                                         code = 403,
                                         msg = if (privilege == 1) "源站反馈此音频需要付费" else "找不到可用的播放地址",
                                         songid = songId)
@@ -98,7 +106,7 @@ object KugouImpl : Impl {
                                 val imgUrl = songInfo.getString("imgUrl").replace("{size}", "150")
 
                                 Song(
-                                        type = "kugou",
+                                        site = "kugou",
                                         link = "http://www.kugou.com/song/#hash=$radioSongId",
                                         songid = radioSongId,
                                         title = songInfo.getString("songName"),
@@ -113,7 +121,7 @@ object KugouImpl : Impl {
                     } catch (e: Exception) {
                         e.printStackTrace()
                         Song(
-                                type = "kugou",
+                                site = "kugou",
                                 code = 500,
                                 msg = e.message ?: "未知异常",
                                 songid = songId

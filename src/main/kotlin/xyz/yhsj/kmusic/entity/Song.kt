@@ -10,7 +10,7 @@ data class Song(
         var msg: String = "操作成功",
 
         //来源网站
-        var type: String? = null,
+        var site: String? = null,
         //歌曲地址
         var link: String? = null,
         //歌曲id

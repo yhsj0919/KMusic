@@ -1,6 +1,7 @@
 package xyz.yhsj.kmusic.impl
 
 import xyz.yhsj.kmusic.entity.MusicResp
+import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 
 interface Impl {
@@ -21,8 +22,14 @@ interface Impl {
     fun getLrcById(songId: String): String
 
     /**
-     * 根据类型,获取歌曲排行榜
+     * 获取歌曲排行榜
      */
-    fun getSongTop(topType: String, page: Int = 1, num: Int = 10): String
+    fun getSongTop(): MusicResp<List<MusicTop>>
+
+    /**
+     * 根据类型,获取歌曲排行榜详情
+     */
+    fun getSongTopDetail(topType: String, page: Int = 1, num: Int = 10): MusicResp<List<Song>>
+
 
 }

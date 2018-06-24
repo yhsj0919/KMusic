@@ -4,6 +4,7 @@ import xyz.yhsj.json.JSONObject
 import xyz.yhsj.json.XML
 import xyz.yhsj.khttp.get
 import xyz.yhsj.kmusic.entity.MusicResp
+import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.utils.future
 
@@ -13,9 +14,16 @@ import xyz.yhsj.kmusic.utils.future
  */
 object KuwoImpl : Impl {
     /**
-     * 根据类型,获取歌曲排行榜
+     * 根据类型,获取歌曲排行榜详情
      */
-    override fun getSongTop(topType: String, page: Int, num: Int): String {
+    override fun getSongTopDetail(topType: String, page: Int, num: Int): MusicResp<List<Song>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * 获取歌曲排行榜
+     */
+    override fun getSongTop(): MusicResp<List<MusicTop>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -60,7 +68,7 @@ object KuwoImpl : Impl {
                                         "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
                         if (songResp.statusCode != 200) {
                             Song(
-                                    type = "kuwo",
+                                    site = "kuwo",
                                     code = songResp.statusCode,
                                     msg = "网络异常",
                                     songid = songId)
@@ -80,7 +88,7 @@ object KuwoImpl : Impl {
                             val imgUrl = songInfo.getString("artist_pic")
 
                             Song(
-                                    type = "kuwo",
+                                    site = "kuwo",
                                     link = "http://www.kuwo.cn/yinyue/$radioSongId",
                                     songid = radioSongId,
                                     title = songInfo.getString("name"),
@@ -94,7 +102,7 @@ object KuwoImpl : Impl {
                     } catch (e: Exception) {
                         e.printStackTrace()
                         Song(
-                                type = "kuwo",
+                                site = "kuwo",
                                 code = 500,
                                 msg = e.message ?: "未知异常",
                                 songid = songId,

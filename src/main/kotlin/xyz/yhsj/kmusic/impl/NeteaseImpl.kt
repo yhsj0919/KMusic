@@ -5,6 +5,7 @@ import xyz.yhsj.json.JSONObject
 import xyz.yhsj.khttp.get
 import xyz.yhsj.khttp.post
 import xyz.yhsj.kmusic.entity.MusicResp
+import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 
 /**
@@ -12,9 +13,16 @@ import xyz.yhsj.kmusic.entity.Song
  */
 object NeteaseImpl : Impl {
     /**
-     * 根据类型,获取歌曲排行榜
+     * 根据类型,获取歌曲排行榜详情
      */
-    override fun getSongTop(topType: String, page: Int, num: Int): String {
+    override fun getSongTopDetail(topType: String, page: Int, num: Int): MusicResp<List<Song>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * 获取歌曲排行榜
+     */
+    override fun getSongTop(): MusicResp<List<MusicTop>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -48,7 +56,7 @@ object NeteaseImpl : Impl {
                         (it as JSONObject).getString("name")
                     }
                     Song(
-                            type = "netease",
+                            site = "netease",
                             link = "http://music.163.com/#/song?id=$songId",
                             songid = songId,
                             title = song.getString("name"),
@@ -96,7 +104,7 @@ object NeteaseImpl : Impl {
                         (it as JSONObject).getString("name")
                     }
                     Song(
-                            type = "netease",
+                            site = "netease",
                             link = "http://music.163.com/#/song?id=$id",
                             songid = id,
                             title = song.getString("name"),

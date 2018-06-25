@@ -17,9 +17,9 @@ object BaiduImpl : Impl {
      * 根据类型,获取歌曲排行榜详情
      * http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&type=1&size=10&offset=0
      */
-    override fun getSongTopDetail(topType: String, page: Int, num: Int): MusicResp<List<Song>> {
+    override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
-            val resp = get(url = "http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&type=$topType&size=$num&offset=${num * (page - 1)}"
+            val resp = get(url = "http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&type=$topId&size=$num&offset=${num * (page - 1)}"
                     , headers = mapOf("Referer" to "http://music.baidu.com/",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
             ))
@@ -64,7 +64,7 @@ object BaiduImpl : Impl {
                     val topReap = MusicTop()
                     topReap.site = "baidu"
                     topReap.name = topObj.getString("name")
-                    topReap.type = topObj.getInt("type").toString()
+                    topReap.topId = topObj.getInt("type").toString()
                     topReap.comment = topObj.getString("comment")
                     topReap.pic = topObj.getString("pic_s192")
                     topReap

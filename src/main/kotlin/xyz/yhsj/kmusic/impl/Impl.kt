@@ -29,7 +29,7 @@ interface Impl {
     /**
      * 根据类型,获取歌曲排行榜详情
      */
-    fun getSongTopDetail(topType: String, page: Int = 1, num: Int = 10): MusicResp<List<Song>>
+    fun getSongTopDetail(topId: String, topType: String = "", topKey: String = "", page: Int = 1, num: Int = 10): MusicResp<List<Song>>
 
 
 }

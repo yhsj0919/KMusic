@@ -14,7 +14,11 @@ data class MusicTop(
         //排行榜名称
         var name: String? = null,
         //排行榜ID
-        var type: String? = null,
+        var topId: String? = null,
+        //类型
+        var topType: String? = null,
+        //排行榜key
+        var topKey: String? = null,
         //排行榜描述
         var comment: String? = null,
         //封面

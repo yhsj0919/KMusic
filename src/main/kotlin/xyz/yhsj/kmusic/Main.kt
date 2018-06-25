@@ -1,9 +1,7 @@
 package xyz.yhsj.kmusic
 
-import xyz.yhsj.kmusic.impl.BaiduImpl
-import xyz.yhsj.kmusic.impl.MusicImpl
-import xyz.yhsj.kmusic.impl.XiamiImpl
-import xyz.yhsj.kmusic.site.MusicSite
+import xyz.yhsj.kmusic.impl.KugouImpl
+import xyz.yhsj.kmusic.impl.QQImpl
 
 fun main(args: Array<String>) {
 
@@ -13,41 +11,43 @@ fun main(args: Array<String>) {
 
     val startTime = System.currentTimeMillis()
     println(startTime)
-
-    val resp = BaiduImpl.getSongTopDetail("1", page = 1, num = 10)
-
-    println(System.currentTimeMillis() - startTime)
-
-    println(resp.msg)
-    resp.data?.forEach {
-        println(it.site)
-        println(it.code)
-        println(it.msg)
-        println(it.title)
-        println(it.songid)
-        println(it.link)
-        println(it.author)
-        println(it.pic)
-        println(it.url)
-//        println(it.lrc)
-        println("")
-        println("")
-    }
-
-
-//    val tops = BaiduImpl.getSongTop()
 //
-//    println(tops.msg)
-//    tops.data?.forEach {
+//    val resp = KugouImpl.getSongTopDetail("6666", page = 1, num = 10)
+//
+//    println(System.currentTimeMillis() - startTime)
+//
+//    println(resp.msg)
+//    resp.data?.forEach {
+//        println(it.site)
 //        println(it.code)
-//        println(it.type)
 //        println(it.msg)
-//        println(it.name)
+//        println(it.title)
+//        println(it.songid)
+//        println(it.link)
+//        println(it.author)
 //        println(it.pic)
-//        println(it.comment)
+//        println(it.url)
+////        println(it.lrc)
 //        println("")
 //        println("")
 //    }
+
+
+    val tops = QQImpl.getSongTop()
+
+    println(tops.msg)
+    tops.data?.forEach {
+        println(it.code)
+        println(it.topId)
+        println(it.topType)
+        println(it.topKey)
+        println(it.msg)
+        println(it.name)
+        println(it.pic)
+        println(it.comment)
+        println("")
+        println("")
+    }
 
 
 //    val sss = NeteaseImpl.getSongById("432506345")

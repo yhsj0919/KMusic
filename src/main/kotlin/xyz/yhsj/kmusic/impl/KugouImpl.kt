@@ -13,18 +13,91 @@ import xyz.yhsj.kmusic.utils.future
 object KugouImpl : Impl {
     /**
      * 根据类型,获取歌曲排行榜详情
+     * http://m.kugou.com/rank/info/6666&json=true
+     * http://m.kugou.com/rank/info/?rankid=6666&page=1&cmd=10&json=true
+     * http://mobilecdn.kugou.com/api/v3/rank/song?page=1&rankid=6666&pagesize=10
      */
-    override fun getSongTopDetail(topType: String, page: Int, num: Int): MusicResp<List<Song>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
+        return try {
+            val resp = get(url = "http://mobilecdn.kugou.com/api/v3/rank/song?rankid=$topId&format=json&page=$page&pagesize=$num"
+                    , headers = mapOf("Referer" to "http://m.kugou.com/rank/song",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
+            } else {
+                val radioData = resp.jsonObject
+
+                val songList = radioData
+                        .getJSONObject("data")
+                        .getJSONArray("info")
+
+
+                //酷狗不支持在详情获取专辑名称
+                val albumNames = HashMap<String, String>()
+                //获取歌曲ID
+                val songIds = songList.map {
+                    val hash = (it as JSONObject).getString("320hash")
+                    val albumName = it.getString("remark")
+                    val tmpHash = if (hash.isNullOrEmpty()) {
+                        it.getString("hash")
+                    } else {
+                        hash
+                    }
+                    albumNames[tmpHash.toUpperCase()] = albumName
+                    tmpHash
+                }
+                //添加专辑名称
+                val musicData = getSongById(songIds)
+                        .apply {
+                            data?.map {
+                                it.albumName = albumNames[it.songid?.toUpperCase()] ?: ""
+                                it
+                            }
+                        }
+                musicData
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MusicResp.failure(msg = e.message)
+        }
     }
 
     /**
      * 获取歌曲排行榜
+     * http://mobilecdn.kugou.com/api/v3/rank/list?plat=0&withsong=1
      */
     override fun getSongTop(): MusicResp<List<MusicTop>> {
-        //http://mobilecdn.kugou.com/api/v3/rank/list?plat=0&withsong=1
-        //http://m.kugou.com/rank/info/6666&json=true
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return try {
+            val resp = get(url = "http://mobilecdn.kugou.com/api/v3/rank/list?plat=0&withsong=1"
+                    , headers = mapOf("Referer" to "http://m.kugou.com/rank/list",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
+            } else {
+                val radioData = resp.jsonObject
+                val songList = radioData
+                        .getJSONObject("data")
+                        .getJSONArray("info")
+
+                val tops = songList.map {
+                    val topObj = it as JSONObject
+                    val topReap = MusicTop()
+                    topReap.site = "kugou"
+                    topReap.name = topObj.getString("rankname")
+                    topReap.topId = topObj.getInt("rankid").toString()
+                    topReap.comment = topObj.getString("intro")
+                    topReap.pic = topObj.getString("imgurl").replace("{size}", "400")
+                    topReap
+                }
+                MusicResp.success(data = tops)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MusicResp.failure(msg = e.message)
+        }
     }
 
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
@@ -102,8 +175,8 @@ object KugouImpl : Impl {
                                         songid = songId)
                             } else {
                                 val radioSongId = songInfo.getString("hash")
-                                val albumImg = songInfo.getString("album_img").replace("{size}", "150")
-                                val imgUrl = songInfo.getString("imgUrl").replace("{size}", "150")
+                                val albumImg = songInfo.getString("album_img").replace("{size}", "400")
+                                val imgUrl = songInfo.getString("imgUrl").replace("{size}", "400")
 
                                 Song(
                                         site = "kugou",

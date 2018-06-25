@@ -14,7 +14,7 @@ object XiamiImpl : Impl {
     /**
      * 根据类型,获取歌曲排行榜详情
      */
-    override fun getSongTopDetail(topType: String, page: Int, num: Int): MusicResp<List<Song>> {
+    override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

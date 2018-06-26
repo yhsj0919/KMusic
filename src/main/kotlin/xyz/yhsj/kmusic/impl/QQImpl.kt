@@ -22,34 +22,29 @@ object QQImpl : Impl {
      * https://c.y.qq.com/mv/fcgi-bin/fcg_musicshow_mvtoplist.fcg?format=jsonp&g_tk=5381&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&needNewCode=0&listid=mainland_musicshow_mvtoplist_current_new
      */
     override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
-//        return try {
-//            val resp = get(url = "https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?date=$topKey&topid=$topId&type=$topType&song_begin=${(page - 1) * num}&song_num=$num&format=jsonp&inCharset=utf8&outCharset=utf-8"
-//                    , headers = mapOf("Referer" to "http://m.y.qq.com",
-//                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
-//            ))
-//            if (resp.statusCode != 200) {
-//                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
-//            } else {
-//                val radioData = resp.text
-//                val mySongs=radioData.replace("MusicJsonCallbacktoplist(", "")
-//                        .replace("})", "}")
-//                val songList = JSONObject(mySongs)
-//                        .getJSONObject("data")
-//                        .getJSONObject("song")
-//                        .getJSONArray("list")
-//
-//                val songIds = songList.map {
-//                    (it as JSONObject).getString("songmid")
-//                }
-//                val musicData = getSongById(songIds)
-//                musicData
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            MusicResp.failure(msg = e.message)
-//        }
+        return try {
+            val resp = get(url = "https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?date=$topKey&topid=$topId&type=$topType&song_begin=${(page - 1) * num}&song_num=$num&format=jsonp&inCharset=utf8&outCharset=utf-8"
+                    , headers = mapOf("Referer" to "http://m.y.qq.com",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
+            } else {
+                val radioData = resp.jsonObject
 
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val songList = radioData
+                        .getJSONArray("songlist")
+
+                val songIds = songList.map {
+                    (it as JSONObject).getJSONObject("data").getString("songmid")
+                }
+                val musicData = getSongById(songIds)
+                musicData
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MusicResp.failure(msg = e.message)
+        }
     }
 
     /**
@@ -91,7 +86,8 @@ object QQImpl : Impl {
                             topReap.pic = topObj.getString("pic")
                             topReap
                         }
-                        .filter { it.name != "巅峰榜·MV" }
+                        //暂时过滤掉MV榜
+                        .filter { !it.topType.isNullOrEmpty() }
                 MusicResp.success(data = tops)
             }
         } catch (e: Exception) {
@@ -182,7 +178,6 @@ object QQImpl : Impl {
                     } else {
                         ""
                     }
-
                     Song(
                             site = "qq",
                             link = "http://y.qq.com/n/yqq/song/$mid.html",

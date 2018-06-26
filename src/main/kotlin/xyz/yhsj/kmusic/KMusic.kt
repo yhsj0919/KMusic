@@ -1,16 +1,20 @@
-package xyz.yhsj.kmusic.impl
+package xyz.yhsj.kmusic
 
 
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.Song
+import xyz.yhsj.kmusic.impl.*
 import xyz.yhsj.kmusic.site.MusicSite
 import xyz.yhsj.kmusic.utils.future
-import java.util.*
 
 /**
  * 统一音乐接口
  */
-object MusicImpl {
+object KMusic {
+    /**
+     * 搜索歌曲.默认在QQ音乐搜索
+     */
+    @JvmStatic
     fun search(key: String, page: Int = 1, num: Int = 10, site: MusicSite = MusicSite.QQ) = when (site) {
         MusicSite.BAIDU -> BaiduImpl
         MusicSite.QQ -> QQImpl
@@ -21,6 +25,10 @@ object MusicImpl {
         MusicSite.MIGU -> MiguImpl
     }.search(key, page, num)
 
+    /**
+     * 根据歌曲ID获取歌曲详情,支持批量获取
+     */
+    @JvmStatic
     fun getSongById(songIds: List<String>, site: MusicSite) = when (site) {
         MusicSite.BAIDU -> BaiduImpl
         MusicSite.QQ -> QQImpl
@@ -31,6 +39,10 @@ object MusicImpl {
         MusicSite.MIGU -> MiguImpl
     }.getSongById(songIds)
 
+    /**
+     * 根据歌曲ID获取歌词,支持批量获取
+     */
+    @JvmStatic
     fun getLrcById(songId: String, site: MusicSite) = when (site) {
         MusicSite.BAIDU -> BaiduImpl
         MusicSite.QQ -> QQImpl
@@ -42,14 +54,15 @@ object MusicImpl {
     }.getLrcById(songId)
 
     /**
-     * 获取所有
+     * 在全部7个网站搜索歌曲.持续时间,以几个网站中最长的为准
      */
+    @JvmStatic
     fun searchAll(key: String, page: Int = 1, num: Int = 1): MusicResp<List<Song>> {
 
         val results =
                 arrayOf(MusicSite.BAIDU, MusicSite.QQ, MusicSite.NETEASE, MusicSite.XIAMI, MusicSite.KUGOU, MusicSite.KUWO, MusicSite.MIGU)
                         .future {
-                            MusicImpl.search(key, page, num, it)
+                            search(key, page, num, it)
                         }
                         .filter { it.code == 200 }
                         .flatMap {

@@ -12,42 +12,42 @@ fun main(args: Array<String>) {
     val startTime = System.currentTimeMillis()
     println(startTime)
 //
-//    val resp = KugouImpl.getSongTopDetail("6666", page = 1, num = 10)
-//
-//    println(System.currentTimeMillis() - startTime)
-//
-//    println(resp.msg)
-//    resp.data?.forEach {
-//        println(it.site)
-//        println(it.code)
-//        println(it.msg)
-//        println(it.title)
-//        println(it.songid)
-//        println(it.link)
-//        println(it.author)
-//        println(it.pic)
-//        println(it.url)
-////        println(it.lrc)
-//        println("")
-//        println("")
-//    }
+    val resp = QQImpl.getSongTopDetail("117",topType = "global",topKey = "2018_25", page = 1, num = 10)
 
+    println(System.currentTimeMillis() - startTime)
 
-    val tops = QQImpl.getSongTop()
-
-    println(tops.msg)
-    tops.data?.forEach {
+    println(resp.msg)
+    resp.data?.forEach {
+        println(it.site)
         println(it.code)
-        println(it.topId)
-        println(it.topType)
-        println(it.topKey)
         println(it.msg)
-        println(it.name)
+        println(it.title)
+        println(it.songid)
+        println(it.link)
+        println(it.author)
         println(it.pic)
-        println(it.comment)
+        println(it.url)
+//        println(it.lrc)
         println("")
         println("")
     }
+
+
+//    val tops = QQImpl.getSongTop()
+//
+//    println(tops.msg)
+//    tops.data?.forEach {
+//        println(it.code)
+//        println(it.topId)
+//        println(it.topType)
+//        println(it.topKey)
+//        println(it.msg)
+//        println(it.name)
+//        println(it.pic)
+//        println(it.comment)
+//        println("")
+//        println("")
+//    }
 
 
 //    val sss = NeteaseImpl.getSongById("432506345")

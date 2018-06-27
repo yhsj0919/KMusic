@@ -2,6 +2,7 @@ package xyz.yhsj.kmusic
 
 import xyz.yhsj.kmusic.impl.KugouImpl
 import xyz.yhsj.kmusic.impl.QQImpl
+import xyz.yhsj.kmusic.impl.XiamiImpl
 
 fun main(args: Array<String>) {
 
@@ -11,8 +12,8 @@ fun main(args: Array<String>) {
 
     val startTime = System.currentTimeMillis()
     println(startTime)
-//
-    val resp = QQImpl.getSongTopDetail("117",topType = "global",topKey = "2018_25", page = 1, num = 10)
+
+    val resp = XiamiImpl.getSongTopDetail("101", page = 1, num = 10)
 
     println(System.currentTimeMillis() - startTime)
 
@@ -33,7 +34,7 @@ fun main(args: Array<String>) {
     }
 
 
-//    val tops = QQImpl.getSongTop()
+//    val tops = XiamiImpl.getSongTop()
 //
 //    println(tops.msg)
 //    tops.data?.forEach {

@@ -13,16 +13,52 @@ import xyz.yhsj.kmusic.utils.future
 object MiguImpl : Impl {
     /**
      * 根据类型,获取歌曲排行榜详情
+     * http://m.10086.cn/migu/remoting/ranking_list_tag?pageSize=20&nid=22296055&pageNo=0
+     * http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334476.png
+     * 咪咕音乐榜  http://m.10086.cn/migu/remoting/ranking_list_tag?nid=22296055
+     * http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334477.png
+     * 咪咕影视榜 http://m.10086.cn/migu/remoting/ranking_list_tag?nid=22296096
+     * http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334478.png
+     * 咪咕网络榜 http://m.10086.cn/migu/remoting/ranking_list_tag?nid=22296137
+     * http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334479.png
+     * 咪咕原创榜 http://m.10086.cn/migu/remoting/ranking_list_tag?nid=22296178
+     * http://m.10086.cn/migu/remoting/ranking_list_tag?pageSize=20&nid=22296055&pageNo=0
+     *
      */
     override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return try {
+            val resp = get(url = "http://m.10086.cn/migu/remoting/ranking_list_tag?nid=$topId"
+                    , headers = mapOf("Referer" to "http://m.10086.cn",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
+            } else {
+                val radioData = resp.jsonObject
+                val songList = radioData
+                        .getJSONObject("result")
+                        .getJSONArray("results")
+                val songIds = songList.map {
+                    (it as JSONObject).getJSONObject("songData").getString("songId")
+                }
+                getSongById(songIds)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MusicResp.failure(msg = e.message)
+        }
     }
 
     /**
      * 获取歌曲排行榜
      */
     override fun getSongTop(): MusicResp<List<MusicTop>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val tops = arrayListOf(
+                MusicTop(site = "migu", topId = "22296055", name = "咪咕音乐榜", pic = "http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334476.png", comment = "咪咕音乐榜"),
+                MusicTop(site = "migu", topId = "22296096", name = "虾米原创榜", pic = "http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334477.png", comment = "虾米原创榜"),
+                MusicTop(site = "migu", topId = "22296137", name = "咪咕影视榜", pic = "http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334478.png", comment = "咪咕影视榜"),
+                MusicTop(site = "migu", topId = "22296178", name = "咪咕音乐人", pic = "http://m.10086.cn/migu/fs/media/p/149/163/5112/image/20171227/1334479.png", comment = "咪咕音乐人"))
+        return MusicResp.success(data = tops)
     }
 
     /**@param key 关键字

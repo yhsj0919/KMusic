@@ -6,6 +6,7 @@ import xyz.yhsj.khttp.get
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
+import xyz.yhsj.kmusic.utils.future
 
 
 /**
@@ -120,7 +121,7 @@ object BaiduImpl : Impl {
                 val songList = songInfo
                         .getJSONObject("data")
                         .getJSONArray("songList")
-                val songs = songList.map {
+                val songs = songList.future {
                     val song = it as JSONObject
                     val radioSongId = song.getLong("songId").toString()
                     Song(

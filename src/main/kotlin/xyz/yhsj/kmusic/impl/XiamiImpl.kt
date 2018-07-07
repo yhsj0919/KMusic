@@ -6,6 +6,7 @@ import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.utils.DecodeKaiserMatrix
+import xyz.yhsj.kmusic.utils.future
 import java.util.*
 
 /**
@@ -117,7 +118,7 @@ object XiamiImpl : Impl {
                 val songList = songInfo
                         .getJSONObject("data")
                         .getJSONArray("trackList")
-                val songs = songList.map {
+                val songs = songList.future {
                     val song = it as JSONObject
                     val radioSongId = song.getString("song_id")
                     Song(

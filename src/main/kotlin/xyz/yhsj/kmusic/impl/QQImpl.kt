@@ -7,6 +7,7 @@ import xyz.yhsj.khttp.get
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
+import xyz.yhsj.kmusic.utils.future
 
 /**
  * 解析
@@ -147,7 +148,7 @@ object QQImpl : Impl {
 
                 val songDatas = songInfo.getJSONArray("data")
 
-                val songs = songDatas.map {
+                val songs = songDatas.future {
                     val songData = it as JSONObject
 
                     val songUrl = songInfo.getJSONObject("url")

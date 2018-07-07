@@ -18,7 +18,7 @@ import xyz.yhsj.khttp.structures.files.FileLike
 /**
  * The default number of seconds to wait before timing out a request.
  */
-const val DEFAULT_TIMEOUT = 30.0
+const val DEFAULT_TIMEOUT = 15.0
 
 @JvmOverloads
 fun delete(url: String, headers: Map<String, String?> = mapOf(), params: Map<String, String> = mapOf(), data: Any? = null, json: Any? = null, auth: Authorization? = null, cookies: Map<String, String>? = null, timeout: Double = DEFAULT_TIMEOUT, allowRedirects: Boolean? = null, stream: Boolean = false, files: List<FileLike> = listOf()): Response {

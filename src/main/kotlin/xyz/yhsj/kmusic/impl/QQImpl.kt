@@ -231,7 +231,7 @@ object QQImpl : Impl {
 //            "http://dl.stream.qqmusic.qq.com/$it$songId.mp3?vkey=$key&guid=5150825362&fromtag=1"
 //        }.joinToString(" , ")
 
-        return "http://dl.stream.qqmusic.qq.com/M800$songId.mp3?vkey=$key&guid=5150825362&fromtag=1"
+        return "http://dl.stream.qqmusic.qq.com/M500$songId.mp3?vkey=$key&guid=5150825362&fromtag=1"
     }
 
     //去除歌词里的转义字符

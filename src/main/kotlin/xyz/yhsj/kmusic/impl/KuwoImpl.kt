@@ -17,14 +17,63 @@ object KuwoImpl : Impl {
      * 根据类型,获取歌曲排行榜详情
      */
     override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return try {
+            val resp = get(url = "http://kbangserver.kuwo.cn/ksong.s?from=pc&fmt=json&type=bang&data=content&rn=$num&id=16&pn=${page - 1}"
+                    , headers = mapOf("Referer" to "http://player.kuwo.cn/webmusic/play",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
+            } else {
+                val radioData = resp.jsonObject
+                val songList = radioData
+                        .getJSONArray("musiclist")
+                val songIds = songList.map {
+                    (it as JSONObject).getString("id")
+                }
+                val musicData = getSongById(songIds)
+                musicData
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MusicResp.failure(msg = e.message)
+        }
     }
 
     /**
      * 获取歌曲排行榜
      */
     override fun getSongTop(): MusicResp<List<MusicTop>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val tops = arrayListOf(
+                MusicTop(site = "kuwo", topId = "12", name = "Billboard榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/14/14/1481781261118_.png", comment = "Billboard榜"),
+                MusicTop(site = "kuwo", topId = "49", name = "iTunes音乐榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/15/15/1481781343391_.png", comment = "iTunes音乐榜"),
+                MusicTop(site = "kuwo", topId = "13", name = "英国UK榜", pic = "http://img4.kwcdn.kuwo.cn/star/upload/7/7/1481781590327_.png", comment = "英国UK榜"),
+                MusicTop(site = "kuwo", topId = "4", name = "台湾幽浮榜", pic = "http://img3.kwcdn.kuwo.cn/star/upload/12/12/1530184349244_.png", comment = "台湾幽浮榜"),
+                MusicTop(site = "kuwo", topId = "14", name = "韩国M-net榜", pic = "http://img4.kwcdn.kuwo.cn/star/upload/2/2/1481781405506_.png", comment = "韩国M-net榜"),
+                MusicTop(site = "kuwo", topId = "15", name = "日本公信榜", pic = "http://img2.kwcdn.kuwo.cn/star/upload/8/8/1481781468616_.png", comment = "日本公信榜"),
+                MusicTop(site = "kuwo", topId = "8", name = "香港电台榜", pic = "http://img3.kwcdn.kuwo.cn/star/upload/11/11/1512641164299_.jpg", comment = "香港电台榜"),
+
+                MusicTop(site = "kuwo", topId = "16", name = "酷我热歌榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/7/7/1444901362664_.jpg", comment = "酷我热歌榜"),
+                MusicTop(site = "kuwo", topId = "17", name = "酷我新歌榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/7/7/1444901569447_.jpg", comment = "酷我新歌榜"),
+                MusicTop(site = "kuwo", topId = "93", name = "酷我飙升榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/2/2/1530587832450_.png", comment = "酷我飙升榜"),
+                MusicTop(site = "kuwo", topId = "62", name = "酷我华语榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/14/14/1530587833022_.png", comment = "酷我华语榜"),
+                MusicTop(site = "kuwo", topId = "158", name = "潮流热歌榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/2/2/1531102994754_.png", comment = "潮流热歌榜"),
+                MusicTop(site = "kuwo", topId = "157", name = "老铁热歌榜", pic = "http://img3.kwcdn.kuwo.cn/star/upload/4/4/1531102994740_.png", comment = "老铁热歌榜"),
+                MusicTop(site = "kuwo", topId = "22", name = "酷我欧美榜", pic = "http://img3.kwcdn.kuwo.cn/star/upload/8/8/1444901107656_.jpg", comment = "酷我欧美榜"),
+                MusicTop(site = "kuwo", topId = "23", name = "酷我日韩榜", pic = "http://img2.kwcdn.kuwo.cn/star/upload/5/5/1444901436021_.jpg", comment = "酷我日韩榜"),
+
+                MusicTop(site = "kuwo", topId = "154", name = "酷我综艺榜", pic = "http://img2.kwcdn.kuwo.cn/star/upload/12/12/1530587833484_.png", comment = "酷我综艺榜"),
+                MusicTop(site = "kuwo", topId = "26", name = "经典怀旧榜", pic = "http://img2.kwcdn.kuwo.cn/star/upload/6/6/1530587833670_.png", comment = "经典怀旧榜"),
+                MusicTop(site = "kuwo", topId = "63", name = "网络神曲榜", pic = "http://img3.kwcdn.kuwo.cn/star/upload/6/6/1530587833558_.png", comment = "网络神曲榜"),
+                MusicTop(site = "kuwo", topId = "76", name = "夜店舞曲榜", pic = "http://img2.kwcdn.kuwo.cn/star/upload/2/2/1444906881618_.jpg", comment = "夜店舞曲榜"),
+                MusicTop(site = "kuwo", topId = "64", name = "热门影视榜", pic = "http://img3.kwcdn.kuwo.cn/star/upload/13/13/1530587834109_.png", comment = "热门影视榜"),
+                MusicTop(site = "kuwo", topId = "153", name = "网红新歌榜", pic = "http://img4.kwcdn.kuwo.cn/star/upload/12/12/1530587833948_.png", comment = "网红新歌榜"),
+                MusicTop(site = "kuwo", topId = "104", name = "酷我首发榜", pic = "http://img4.kwcdn.kuwo.cn/star/upload/12/12/1530587834348_.png", comment = "酷我首发榜"),
+                MusicTop(site = "kuwo", topId = "106", name = "酷我真声音", pic = "http://img1.kwcdn.kuwo.cn/star/upload/10/10/1530587834378_.png", comment = "酷我真声音"),
+                MusicTop(site = "kuwo", topId = "151", name = "腾讯音乐人", pic = "http://img2.kwcdn.kuwo.cn/star/upload/4/4/1530587834692_.png", comment = "腾讯音乐人"),
+                MusicTop(site = "kuwo", topId = "145", name = "单曲畅销榜", pic = "http://img1.kwcdn.kuwo.cn/star/upload/7/7/1530587834743_.png", comment = "单曲畅销榜")
+        )
+        return MusicResp.success(data = tops)
     }
 
     /**@param key 关键字
@@ -33,7 +82,7 @@ object KuwoImpl : Impl {
      */
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
-            val resp = get(url = "http://search.kuwo.cn/r.s?ft=music&itemset=web_2013&rn=$num&rformat=json&encoding=utf8&all=$key&pn=${page - 1}"
+            val resp = get(url = "http://search.kuwo.cn/r.s?ft=music&newsearch=1&primitive=0&cluster=0&itemset=newkm&rn=$num&rformat=json&encoding=utf8&all=$key&pn=${page - 1}"
                     , headers = mapOf("Referer" to "http://player.kuwo.cn/webmusic/play",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
             ))

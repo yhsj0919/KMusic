@@ -2,6 +2,7 @@ package xyz.yhsj.kmusic.impl
 
 import xyz.yhsj.json.JSONObject
 import xyz.yhsj.khttp.get
+import xyz.yhsj.kmusic.entity.Album
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
@@ -11,6 +12,23 @@ import xyz.yhsj.kmusic.utils.future
  * 酷狗解析
  */
 object KugouImpl : Impl {
+    /**
+     *根据ID获取专辑详情
+     * @param albumId 专辑ID
+     */
+    override fun getAlbumById(albumId: String): MusicResp<Album> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * @param key 关键字
+     * @param page 页数
+     * 搜索专辑
+     */
+    override fun searchAlbum(key: String, page: Int, num: Int): MusicResp<List<Album>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     /**
      * 根据类型,获取歌曲排行榜详情
      * http://m.kugou.com/rank/info/6666&json=true
@@ -101,6 +119,7 @@ object KugouImpl : Impl {
     }
 
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
+        //http://ioscdn.kugou.com/api/v3/search/song?keyword=另一个童话&page=1&pagesize=15&showtype=10&plat=2&version=7910&tag=1&correct=1&privilege=1&sver=5
         return try {
             val resp = get(url = "http://mobilecdn.kugou.com/api/v3/search/song?keyword=$key&format=json&page=$page&pagesize=$num"
                     , headers = mapOf("Referer" to "http://m.kugou.com/v2/static/html/search.html",

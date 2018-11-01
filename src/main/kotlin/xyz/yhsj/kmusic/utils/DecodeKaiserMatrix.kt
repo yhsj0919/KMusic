@@ -1,6 +1,5 @@
 package xyz.yhsj.kmusic.utils
 
-import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 
 /**
@@ -39,7 +38,7 @@ object DecodeKaiserMatrix {
         return try {
             val tmp = URLDecoder.decode(sb.toString(), "UTF-8")
             tmp.replace("\\^".toRegex(), "0")
-        } catch (e: UnsupportedEncodingException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }

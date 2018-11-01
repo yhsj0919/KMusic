@@ -3,6 +3,7 @@ package xyz.yhsj.kmusic.impl
 
 import xyz.yhsj.json.JSONObject
 import xyz.yhsj.khttp.get
+import xyz.yhsj.kmusic.entity.Album
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
@@ -14,6 +15,23 @@ import xyz.yhsj.kmusic.utils.future
  */
 
 object BaiduImpl : Impl {
+    /**
+     *根据ID获取专辑详情
+     * @param albumId 专辑ID
+     */
+    override fun getAlbumById(albumId: String): MusicResp<Album> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * @param key 关键字
+     * @param page 页数
+     * 搜索专辑
+     */
+    override fun searchAlbum(key: String, page: Int, num: Int): MusicResp<List<Album>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     /**
      * 根据类型,获取歌曲排行榜详情
      * http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&type=1&size=10&offset=0

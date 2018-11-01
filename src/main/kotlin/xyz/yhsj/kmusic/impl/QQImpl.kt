@@ -4,6 +4,7 @@ package xyz.yhsj.kmusic.impl
 import xyz.yhsj.json.JSONArray
 import xyz.yhsj.json.JSONObject
 import xyz.yhsj.khttp.get
+import xyz.yhsj.kmusic.entity.Album
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
@@ -13,6 +14,97 @@ import xyz.yhsj.kmusic.utils.future
  * 解析
  */
 object QQImpl : Impl {
+    /**
+     *根据ID获取专辑详情
+     * @param albumId 专辑ID
+     * https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg?albummid=000gCu9F4cwL7S&g_tk=5381&jsonpCallback=albuminfoCallback&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+     */
+    override fun getAlbumById(albumId: String): MusicResp<Album> {
+        return try {
+            val resp = get(url = "https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg?albummid=$albumId"
+                    , headers = mapOf("Referer" to "http://m.y.qq.com",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
+            } else {
+                val radioData = resp.jsonObject
+
+                val albumResp = radioData
+                        .getJSONObject("data")
+                val album = Album(
+                        site = "qq",
+                        name = albumResp.getString("name"),
+                        mid = albumResp.getString("mid"),
+                        pic = "https://y.gtimg.cn/music/photo_new/T002R300x300M000${albumResp.getString("mid")}.jpg?max_age=2592000",
+                        singerName = albumResp.getString("singername"),
+                        publicTime = albumResp.getString("aDate"),
+                        songCount = albumResp.getLong("total_song_num"),
+                        desc = albumResp.getString("desc"),
+                        company = albumResp.getString("company"),
+                        lan = albumResp.getString("lan"),
+                        genre = albumResp.getString("genre")
+                )
+
+                val songIds = albumResp.getJSONArray("list")
+                        .map { (it as JSONObject).getString("songmid") }
+
+                album.list.addAll(getSongById(songIds).data ?: emptyList())
+
+                MusicResp(data = album)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MusicResp.failure(msg = e.message)
+        }
+    }
+
+    /**
+     * @param key 关键字
+     * @param page 页数
+     * 搜索专辑
+     */
+    override fun searchAlbum(key: String, page: Int, num: Int): MusicResp<List<Album>> {
+        return try {
+            //https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.center&searchid=43060341428840891&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p=1&n=20&w=%E8%96%9B%E4%B9%8B%E8%B0%A6&g_tk=5381&jsonpCallback=MusicJsonCallback6790904757407503&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+            //https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&remoteplace=txt.yqq.center&searchid=53629173608275471&aggr=0&catZhida=1&lossless=0&sem=10&t=8&p=1&n=30&w=%E8%96%9B%E4%B9%8B%E8%B0%A6&g_tk=5381&jsonpCallback=MusicJsonCallback6651207653165634&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+
+            //t=8为 专辑搜索  t=0为单曲搜索
+            val resp = get(url = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?cr=1&p=$page&n=$num&format=json&w=$key&t=8"
+                    , headers = mapOf("Referer" to "http://m.y.qq.com",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            ))
+            if (resp.statusCode != 200) {
+                MusicResp.failure(code = resp.statusCode, msg = "请求失败")
+            } else {
+                val radioData = resp.jsonObject
+
+                val albumList = radioData
+                        .getJSONObject("data")
+                        .getJSONObject("album")
+                        .getJSONArray("list")
+
+                val albums = albumList.map {
+                    val album = (it as JSONObject)
+
+
+                    Album(site = "qq",
+                            name = album.getString("albumName"),
+                            mid = album.getString("albumMID"),
+                            pic = album.getString("albumPic"),
+                            singerName = album.getString("singerName"),
+                            publicTime = album.getString("publicTime"),
+                            songCount = album.getLong("song_count")
+                    )
+                }
+                MusicResp(data = albums)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MusicResp.failure(msg = e.message)
+        }
+    }
+
     /**
      * 根据类型,获取歌曲排行榜详情
      * top 巅峰榜
@@ -99,7 +191,11 @@ object QQImpl : Impl {
 
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
-            val resp = get(url = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?cr=1&p=$page&n=$num&format=json&w=$key"
+            //https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.center&searchid=43060341428840891&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p=1&n=20&w=%E8%96%9B%E4%B9%8B%E8%B0%A6&g_tk=5381&jsonpCallback=MusicJsonCallback6790904757407503&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+            //https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&remoteplace=txt.yqq.center&searchid=53629173608275471&aggr=0&catZhida=1&lossless=0&sem=10&t=8&p=1&n=30&w=%E8%96%9B%E4%B9%8B%E8%B0%A6&g_tk=5381&jsonpCallback=MusicJsonCallback6651207653165634&loginUin=0&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0
+
+            //t=8为 专辑搜索  t=0为单曲搜索
+            val resp = get(url = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?cr=1&p=$page&n=$num&format=json&w=$key&t=0"
                     , headers = mapOf("Referer" to "http://m.y.qq.com",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
             ))
@@ -107,6 +203,7 @@ object QQImpl : Impl {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
+
                 val songList = radioData
                         .getJSONObject("data")
                         .getJSONObject("song")

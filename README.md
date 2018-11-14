@@ -24,3 +24,14 @@
 | 网易云音乐   |✓|✓| | |
 | 酷我音乐     |✓|✓| | |
 | 咪咕音乐     |✓|✓| | |
+
+
+# 简单使用
+```kotlin
+//返回7个网站的所有数据
+val resp = KMusic.searchAll(key = songName!!)
+
+//指定网站查询
+val resp = KMusic.search(key = songName!!,site = MusicSite.QQ)
+
+```

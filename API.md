@@ -108,6 +108,85 @@
 
 [相似歌手](http://musicapi.taihe.com/v1/restserver/ting?from=webapp_music&format=json&method=baidu.ting.artist.recommendArtist&ting_uid=2517&num=5)
 
+
+
+# 虾米
+
+[新歌](http://api.xiami.com/web?v=2.0&app_key=1&page=1&limit=20&_ksTS=1541734962429_75&callback=jsonp76&r=song/new)
+
+[排行榜详情,手机版的排行榜事固定的](http://api.xiami.com/web?v=2.0&app_key=1&id=101&page=1&limit=20&_ksTS=1542182419327_278&callback=jsonp279&r=rank/song-list)
+
+[歌单](http://api.xiami.com/web?v=2.0&app_key=1&_ksTS=1542181898864_80&callback=jsonp81&r=collect/recommend)
+
+[歌单详情](http://api.xiami.com/web?v=2.0&app_key=1&id=571981716&_ksTS=1542183248744_259&callback=jsonp260&r=collect/detail)
+
+[歌手分类](http://api.xiami.com/web?v=2.0&app_key=1&_ksTS=1542181949957_101&callback=jsonp102&r=artist/category)
+
+[歌手分类详情](http://api.xiami.com/web?v=2.0&app_key=1&class=1&type=1&_ksTS=1542181970327_116&callback=jsonp117&r=artist/hot-list)
+
+[歌手详情](http://api.xiami.com/web?v=2.0&app_key=1&id=2110037510&type=artistdetail&_ksTS=1542182040117_132&callback=jsonp133&r=artist/detail)
+
+[歌手音乐](http://api.xiami.com/web?v=2.0&app_key=1&id=2110037510&page=1&limit=20&_ksTS=1542182040119_146&callback=jsonp147&r=artist/hot-songs)
+
+[今日热搜](http://api.xiami.com/web?v=2.0&app_key=1&limit=50&_ksTS=1542182299696_261&callback=jsonp262&r=search/hot)
+
+[搜索](http://api.xiami.com/web?v=2.0&app_key=1&key=薛之谦&page=1&limit=20&_ksTS=1542182818596_141&callback=jsonp142&r=search/songs)
+
+# 咪咕音乐 
+
+[banner](http://m.music.migu.cn/migu/remoting/cms_list_tag?pageSize=10&nid=23831003&pageNo=0&type=2006)
+
+[推荐歌单](http://m.music.migu.cn/migu/remoting/cms_list_tag?pageSize=10&nid=23853969&pageNo=0&type=2006)
+
+[推荐歌单,更多](http://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&tagId=&startIndex=0)
+
+[歌单详情](http://m.music.migu.cn/migu/remoting/playlist_query_tag?onLine=1&queryChannel=0&createUserId=221acca8-9179-4ba7-ac3f-2b0fdffed356&contentCountMin=5&playListId=132568876)
+
+[歌单音乐](http://m.music.migu.cn/migu/remoting/playlistcontents_query_tag?playListType=2&playListId=132568876&contentCount=25)
+
+[新歌速递](http://m.music.migu.cn/migu/remoting/cms_list_tag?pageSize=3&nid=23853978&pageNo=0)
+
+[新歌速递,更多](http://m.music.migu.cn/migu/remoting/cms_list_tag?pageSize=20&nid=11248351&pageNo=0)
+
+[新碟上架](http://m.music.migu.cn/migu/remoting/cms_list_tag?pageSize=10&nid=23854016&pageNo=0&type=2003)
+
+[专辑详情](http://m.music.migu.cn/migu/remoting/cms_album_detail_tag?albumId=1113215408)
+
+[专辑音乐](http://m.music.migu.cn/migu/remoting/cms_album_song_list_tag?albumId=1113215408)
+
+音乐榜23603703
+影视榜23603721
+华语榜(内地)23603926
+华语榜(港台)23603954
+欧美榜23603974
+日韩榜23603982
+新人榜23603993
+唱作人榜23604008
+彩铃榜23604023
+原创榜23604032
+KTV榜23604040
+网络榜23604058
+新专辑榜23604500
+MV榜23604509
+
+[排行榜热门,排行榜固定的](http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23603703&pageSize=3&pageNo=0)
+
+[排行榜详情](http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23603703&pageSize=200&pageNo=0)
+
+[搜索热词](http://m.music.migu.cn/migu/remoting/cms_list_tag?pageSize=10&nid=24041523&pageNo=0&type=2005)
+
+[搜索提示](http://m.music.migu.cn/migu/remoting/autocomplete_tag?keyword=薛之谦)
+
+[歌曲搜索](http://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=2&keyword=薛之谦&pgc=1)
+
+[歌手搜索](http://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=1&keyword=薛之谦&pgc=1)
+
+[专辑搜索](http://m.music.migu.cn/migu/remoting/scr_search_tag?rows=20&type=4&keyword=薛之谦&pgc=1)
+
+[歌手相关歌曲](http://m.music.migu.cn/migu/remoting/cms_artist_song_list_tag?artistId=1212&pageSize=)
+
+[歌手详情](http://m.music.migu.cn/migu/remoting/cms_artist_detail_tag?artistId=1212)
+
 # **酷狗音乐**
 
 ##### 来自酷狗uwp客户端

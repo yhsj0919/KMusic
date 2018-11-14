@@ -12,25 +12,25 @@ fun main(args: Array<String>) {
     val startTime = System.currentTimeMillis()
     println(startTime)
 
-//    val resp = QQImpl.search(key = songName!!,num = 15)
+    val resp = XiamiImpl.search(key = songName!!,num = 15)
 
     println(System.currentTimeMillis() - startTime)
 
-//    println(resp.msg)
-//    resp.data?.forEach {
-//        println(it.site)
-//        println(it.code)
-//        println(it.msg)
-//        println(it.title)
-//        println(it.songid)
-//        println(it.link)
-//        println(it.author)
-//        println(it.pic)
-//        println(it.url)
-//        println(it.lrc)
-//        println("")
-//        println("")
-//    }
+    println(resp.msg)
+    resp.data?.forEach {
+        println(it.site)
+        println(it.code)
+        println(it.msg)
+        println(it.title)
+        println(it.songid)
+        println(it.link)
+        println(it.author)
+        println(it.pic)
+        println(it.url)
+        println(it.lrc)
+        println("")
+        println("")
+    }
 
 
 //    val tops = NeteaseImpl.getSongTop()
@@ -83,28 +83,28 @@ fun main(args: Array<String>) {
 //        println("")
 //    }
 
-    val resp = QQImpl.getAlbumById("001L7UIu3GXVtT")
-    println(resp.msg)
-
-    println(resp.data?.site)
-    println(resp.data?.code)
-    println(resp.data?.msg)
-    println(resp.data?.name)
-    println(resp.data?.mid)
-    println(resp.data?.pic)
-    println(resp.data?.singerName)
-    println(resp.data?.publicTime)
-    println(resp.data?.songCount)
-//    println(resp.data?.desc)
-    println(resp.data?.company)
-    println(resp.data?.lan)
-    println(resp.data?.genre)
-    resp.data?.list?.forEach {
-        println("")
-        println(it.title)
-        println(it.url)
-
-    }
+//    val resp = QQImpl.getAlbumById("001L7UIu3GXVtT")
+//    println(resp.msg)
+//
+//    println(resp.data?.site)
+//    println(resp.data?.code)
+//    println(resp.data?.msg)
+//    println(resp.data?.name)
+//    println(resp.data?.mid)
+//    println(resp.data?.pic)
+//    println(resp.data?.singerName)
+//    println(resp.data?.publicTime)
+//    println(resp.data?.songCount)
+////    println(resp.data?.desc)
+//    println(resp.data?.company)
+//    println(resp.data?.lan)
+//    println(resp.data?.genre)
+//    resp.data?.list?.forEach {
+//        println("")
+//        println(it.title)
+//        println(it.url)
+//
+//    }
 
     println("")
     println("")

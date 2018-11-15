@@ -189,5 +189,18 @@ MV榜23604509
 
 # **酷狗音乐**
 
-##### 来自酷狗uwp客户端
-[首页推荐](http://uwp.kugou.com/v2/musicol/yueku/v1/home/getcache/getData.js?cdn=cdn&version=201811070900)
+[歌手简单信息](http://so.service.kugou.com/get/complex?callback=jQuery1124004520999669761783_1542263957856&word=%E5%91%A8%E6%9D%B0%E4%BC%A6&_=1542263957874)
+
+[单曲搜索](http://songsearch.kugou.com/song_search_v2?callback=jQuery1124004520999669761783_1542263957856&keyword=%E8%96%9B%E4%B9%8B%E8%B0%A6&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1542263957858)
+
+[歌单搜索](http://specialsearch.kugou.com/special_search?callback=jQuery1124004520999669761783_1542263957856&keyword=%E8%96%9B%E4%B9%8B%E8%B0%A6&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1542263957860)
+
+[歌单详情,html,取data属性](http://www.kugou.com/yy/special/single/23830.html)
+
+[歌手专辑](http://www.kugou.com/yy/?r=singer/album&sid=3520&p=1&t=1542265291412)
+
+[专辑详情,html](http://www.kugou.com/yy/album/single/8545640.html)
+
+[歌手mv](http://www.kugou.com/yy/?r=singer/video&sid=3520&p=1&t=1542265381107)
+
+[MV搜索](http://mvsearch.kugou.com/mv_search?callback=jQuery1124004520999669761783_1542263957856&keyword=%E8%96%9B%E4%B9%8B%E8%B0%A6&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1542263957861)

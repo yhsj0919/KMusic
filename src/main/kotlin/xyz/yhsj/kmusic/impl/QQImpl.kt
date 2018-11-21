@@ -336,6 +336,7 @@ object QQImpl : Impl {
             this.replace("&#10;", "\n")
                     .replace("&#13;", "\r")
                     .replace("&#32;", " ")
+                    .replace("&#39;", "'")
                     .replace("&#40;", "(")
                     .replace("&#41;", ")")
                     .replace("&#45;", "-")

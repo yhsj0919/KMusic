@@ -41,21 +41,21 @@ class GenericRequest internal constructor(
 
     companion object {
         val DEFAULT_HEADERS = mapOf(
-            "Accept" to "*/*",
-            "Accept-Encoding" to "gzip, deflate",
-            "User-Agent" to "khttp/1.0.0-SNAPSHOT"
+                "Accept" to "*/*",
+                "Accept-Encoding" to "gzip, deflate",
+                "User-Agent" to "khttp/1.0.0-SNAPSHOT"
         )
         val DEFAULT_DATA_HEADERS = mapOf(
-            "Content-Type" to "text/plain"
+                "Content-Type" to "text/plain"
         )
         val DEFAULT_FORM_HEADERS = mapOf(
-            "Content-Type" to "application/x-www-form-urlencoded"
+                "Content-Type" to "application/x-www-form-urlencoded"
         )
         val DEFAULT_UPLOAD_HEADERS = mapOf(
-            "Content-Type" to "multipart/form-data; boundary=%s"
+                "Content-Type" to "multipart/form-data; boundary=%s"
         )
         val DEFAULT_JSON_HEADERS = mapOf(
-            "Content-Type" to "application/json"
+                "Content-Type" to "application/json"
         )
     }
 
@@ -130,6 +130,7 @@ class GenericRequest internal constructor(
 
     init {
         this.url = this.makeRoute(url)
+//        this.url = url
         if (URI(this.url).scheme !in setOf("http", "https")) {
             throw IllegalArgumentException("Invalid schema. Only http:// and https:// are supported.")
         }
@@ -195,14 +196,14 @@ class GenericRequest internal constructor(
 
     private fun URL.toIDN(): URL {
         val newHost = IDN.toASCII(this.host)
-        this.javaClass.getDeclaredField("host").apply { this.isAccessible = true }.set(this, newHost)
-        this.javaClass.getDeclaredField("authority").apply { this.isAccessible = true }.set(this, if (this.port == -1) this.host else "${this.host}:${this.port}")
+//        this.javaClass.getDeclaredField("host").apply { this.isAccessible = true }.set(this, newHost)
+//        this.javaClass.getDeclaredField("authority").apply { this.isAccessible = true }.set(this, if (this.port == -1) this.host else "${this.host}:${this.port}")
         val query = if (this.query == null) {
             null
         } else {
             URLDecoder.decode(this.query, "UTF-8")
         }
-        return URL(URI(this.protocol, this.userInfo, this.host, this.port, this.path, query, this.ref).toASCIIString())
+        return URL(URI(this.protocol, this.userInfo, newHost, this.port, this.path, query, this.ref).toASCIIString())
     }
 
     private fun makeRoute(route: String) = URL(route + if (this.params.isNotEmpty()) "?${Parameters(this.params)}" else "").toIDN().toString()

@@ -1,7 +1,6 @@
 package xyz.yhsj.kmusic
 
 import xyz.yhsj.kmusic.impl.*
-import xyz.yhsj.kmusic.site.MusicSite
 
 fun main(args: Array<String>) {
 
@@ -12,7 +11,7 @@ fun main(args: Array<String>) {
     val startTime = System.currentTimeMillis()
     println(startTime)
 
-    val resp = XiamiImpl.search(key = songName!!,num = 15)
+    val resp = XiamiImpl.search(key = songName!!, num = 15)
 
     println(System.currentTimeMillis() - startTime)
 
@@ -27,7 +26,7 @@ fun main(args: Array<String>) {
         println(it.author)
         println(it.pic)
         println(it.url)
-        println(it.lrc)
+//        println(it.lrc)
         println("")
         println("")
     }

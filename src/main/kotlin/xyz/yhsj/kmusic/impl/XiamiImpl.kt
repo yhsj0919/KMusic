@@ -2,18 +2,24 @@ package xyz.yhsj.kmusic.impl
 
 import xyz.yhsj.json.JSONObject
 import xyz.yhsj.khttp.get
+import xyz.yhsj.khttp.structures.cookie.Cookie
+import xyz.yhsj.khttp.structures.cookie.CookieJar
 import xyz.yhsj.kmusic.entity.Album
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.utils.DecodeKaiserMatrix
 import xyz.yhsj.kmusic.utils.future
+import xyz.yhsj.kmusic.utils.md5
 import java.util.*
 
 /**
  * 虾米解析
  */
 object XiamiImpl : Impl {
+    var cookie = CookieJar()
+    var cookieStr = ""
+
     /**
      *根据ID获取专辑详情
      * @param albumId 专辑ID
@@ -39,17 +45,16 @@ object XiamiImpl : Impl {
         return try {
             val resp = get(url = "http://api.xiami.com/web?v=2.0&app_key=1&id=$topId&type=0&page=$page&limit=$num&_ksTS=${Date().time}_96&r=rank/song-list"
                     , headers = mapOf("Referer" to "http://m.xiami.com",
-                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+                    "User-Agent" to "Mozilla/5.0"
             ))
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
-                println(radioData)
                 val songList = radioData
                         .getJSONArray("data")
                 val songIds = songList.map {
-                    (it as JSONObject).getLong("song_id") .toString()
+                    (it as JSONObject).getLong("song_id").toString()
                 }
                 val musicData = getSongById(songIds)
                 musicData
@@ -84,31 +89,42 @@ object XiamiImpl : Impl {
     }
 
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
+
         return try {
-            val resp = get(url = "http://api.xiami.com/web?key=$key&v=2.0&app_key=1&r=search/songs&page=$page&limit=$num"
-                    , headers = mapOf("Referer" to "http://m.xiami.com",
-                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+            if (!cookie.containsKey("xm_sg_tk")) {
+                getCookie()
+            }
+            val params = "{\"key\":\"$key\",\"pagingVO\":{\"page\":$page,\"pageSize\":$num}}"
+            val tk = getTK(params)
+            val resp = get(url = "https://www.xiami.com/api/search/searchSongs?_q=$params&_s=$tk", cookies = cookie
+                    , headers = mapOf("Referer" to "https://www.xiami.com/search?key=$key",
+                    "User-Agent" to "Mozilla/5.0"
             ))
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
                 val songList = radioData
+                        .getJSONObject("result")
                         .getJSONObject("data")
                         .getJSONArray("songs")
                 val songs = songList.map {
                     val song = it as JSONObject
-                    val songId = song.getLong("song_id").toString()
+                    val songId = song.getLong("songId").toString()
                     Song(
                             site = "xiami",
                             link = "http://www.xiami.com/song/$songId",
                             songid = songId,
-                            title = song.getString("song_name"),
-                            author = song.getString("artist_name"),
-                            url = song.getString("listen_file"),
-                            lrc = getLrcById(song.getString("lyric")),
-                            pic = song.getString("album_logo"),
-                            albumName = song.getString("album_name")
+                            title = song.getString("songName"),
+                            author = song.getString("singers"),
+                            url = (song.getJSONArray("listenFiles").last() as JSONObject).getString("listenFile"),
+                            lrc = getLrcById(try {
+                                song.getJSONObject("lyricInfo").getString("lyricFile")
+                            } catch (e: Exception) {
+                                ""
+                            }),
+                            pic = song.getString("albumLogo"),
+                            albumName = song.getString("albumName")
                     )
                 }
                 MusicResp.success(data = songs)
@@ -127,7 +143,7 @@ object XiamiImpl : Impl {
         return try {
             val songResp = get(url = "http://www.xiami.com/song/playlist/id/$songId/type/0/cat/json",
                     headers = mapOf("Referer" to "http://www.xiami.com",
-                            "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
+                            "User-Agent" to "Mozilla/5.0"))
             if (songResp.statusCode != 200) {
                 MusicResp.failure(code = songResp.statusCode, msg = "请求失败")
             } else {
@@ -167,7 +183,7 @@ object XiamiImpl : Impl {
             val songResp = get(url = songId,
                     timeout = 5.0,
                     headers = mapOf("Referer" to "http://www.xiami.com",
-                            "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
+                            "User-Agent" to "Mozilla/5.0"))
             if (songResp.statusCode == 200) {
                 val songInfo = songResp.text
                 songInfo
@@ -188,4 +204,45 @@ object XiamiImpl : Impl {
         this.startsWith("//") -> "http:$this"
         else -> "http://$this"
     }
+
+    fun parseCookie(cookie: String): CookieJar {
+        val valueList = cookie.split("secure,").map(String::trim)
+        val attributes =
+                valueList
+                        .mapIndexed { index, s ->
+                            if (index != valueList.size - 1) {
+                                s + "secure,"
+                            } else {
+                                s
+                            }
+                        }
+                        .map {
+                            val k = it.split("=")[0].trim()
+                            val v = it.substring(k.length + 1, it.length)
+                            k to v
+                        }.toMap()
+        return CookieJar(attributes)
+    }
+
+
+    fun getCookie() {
+        val resp = get(url = "https://www.xiami.com"
+                , headers = mapOf("Referer" to "http://img.xiami.com/static/swf/seiya/player.swf?v=${Date().time}",
+                "User-Agent" to "Mozilla/5.0"
+        ))
+        cookieStr = resp.headers["set-cookie"] ?: ""
+        cookie = parseCookie(resp.headers["set-cookie"] ?: "")
+    }
+
+    fun getTK(params: String): String {
+        return (cookie["xm_sg_tk"]?.split("_")?.first() + "_xmMain_/api/search/searchSongs_" + params).md5()
+    }
+
 }
+
+// xm_sg_tk.sig=aTe73Wd7eOsZGWlIrxmCOSghN1EM3TfaC-r1hIC0PbE;
+// path=/;
+// expires=Wed, 27 Feb 2019 02:07:53 GMT;
+// domain=.xiami.com;
+// xm_sg_tk=bff15d950c322349f2910204f4b6d8b5_1551060473657;
+// xmgid=fa460838-fdde-4f46-a30d-3c4446732e49;

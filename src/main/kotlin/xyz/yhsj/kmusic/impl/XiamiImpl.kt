@@ -2,7 +2,6 @@ package xyz.yhsj.kmusic.impl
 
 import xyz.yhsj.json.JSONObject
 import xyz.yhsj.khttp.get
-import xyz.yhsj.khttp.structures.cookie.Cookie
 import xyz.yhsj.khttp.structures.cookie.CookieJar
 import xyz.yhsj.kmusic.entity.Album
 import xyz.yhsj.kmusic.entity.MusicResp
@@ -103,6 +102,8 @@ object XiamiImpl : Impl {
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
+                println(resp.text)
+
                 val radioData = resp.jsonObject
                 val songList = radioData
                         .getJSONObject("result")
@@ -118,11 +119,16 @@ object XiamiImpl : Impl {
                             title = song.getString("songName"),
                             author = song.getString("singers"),
                             url = (song.getJSONArray("listenFiles").last() as JSONObject).getString("listenFile"),
-                            lrc = getLrcById(try {
+                            lrc = try {
                                 song.getJSONObject("lyricInfo").getString("lyricFile")
                             } catch (e: Exception) {
-                                ""
-                            }),
+                                "[00:00:00]此歌曲可能没有歌词"
+                            },
+//                            lrc = getLrcById(try {
+//                                song.getJSONObject("lyricInfo").getString("lyricFile")
+//                            } catch (e: Exception) {
+//                                ""
+//                            }),
                             pic = song.getString("albumLogo"),
                             albumName = song.getString("albumName")
                     )
@@ -209,13 +215,7 @@ object XiamiImpl : Impl {
         val valueList = cookie.split("secure,").map(String::trim)
         val attributes =
                 valueList
-                        .mapIndexed { index, s ->
-                            if (index != valueList.size - 1) {
-                                s + "secure,"
-                            } else {
-                                s
-                            }
-                        }
+                        .flatMap { it.split("httponly,").map(String::trim) }
                         .map {
                             val k = it.split("=")[0].trim()
                             val v = it.substring(k.length + 1, it.length)

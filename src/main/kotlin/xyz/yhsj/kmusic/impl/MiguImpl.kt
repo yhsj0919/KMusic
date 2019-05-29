@@ -6,6 +6,7 @@ import xyz.yhsj.kmusic.entity.Album
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
+import xyz.yhsj.kmusic.impl.MiguImpl.getString
 import xyz.yhsj.kmusic.utils.future
 
 /**
@@ -85,8 +86,8 @@ object MiguImpl : Impl {
      */
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
-            val resp = get(url = "http://m.10086.cn/migu/remoting/scr_search_tag?type=2&rows=$num&keyword=$key&pgc=$page"
-                    , headers = mapOf("Referer" to "http://m.10086.cn",
+            val resp = get(url = "http://m.music.migu.cn/migu/remoting/scr_search_tag?rows=$num&type=2&keyword=$key&pgc=$page"
+                    , headers = mapOf(
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
             ))
             if (resp.statusCode != 200) {
@@ -96,10 +97,23 @@ object MiguImpl : Impl {
                 val songList = radioData
                         .getJSONArray("musics")
 
-                val songIds = songList.map {
-                    (it as JSONObject).getString("id")
+                val songs = songList.map {
+                    val songInfo = (it as JSONObject)
+                    Song(
+                            site = "migu",
+                            link = "http://music.migu.cn/v2/music/song/${songInfo.getString("id")}",
+                            songid = songInfo.getString("id"),
+                            title = songInfo.getString("songName", ""),
+                            author = songInfo.getString("singerName", ""),
+                            url = songInfo.getString("mp3", ""),
+                            lrc = songInfo.getString("lyrics", ""),
+                            pic = songInfo.getString("cover", ""),
+                            albumName = songInfo.getString("albumName", "")
+                    )
+
+
                 }
-                getSongById(songIds)
+                return MusicResp.success(data = songs)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -116,8 +130,8 @@ object MiguImpl : Impl {
                 songIds.future { songId ->
 
                     try {
-                        val songResp = get(url = "http://music.migu.cn/v2/async/audioplayer/playurl/$songId",
-                                headers = mapOf("Referer" to "http://m.10086.cn",
+                        val songResp = get(url = "http://m.music.migu.cn/migu/remoting/cms_detail_tag?cpid=$songId",
+                                headers = mapOf(
                                         "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
                         if (songResp.statusCode != 200) {
                             Song(
@@ -126,21 +140,19 @@ object MiguImpl : Impl {
                                     msg = "网络异常",
                                     songid = songId)
                         } else {
-                            val songInfo = songResp.jsonObject
-                            val radioSongId = songInfo.getString("musicId")
-                            val radioAuthor = songInfo.getJSONArray("artistInfoList").joinToString(",") {
-                                (it as JSONObject).getString("artistName", "")
-                            }
+                            val songInfo = songResp.jsonObject.getJSONObject("data")
+                            val radioSongId = songInfo.getString("songId")
+                            val radioAuthor = songInfo.getJSONArray("singerName").joinToString(",")
                             Song(
                                     site = "migu",
                                     link = "http://music.migu.cn/v2/music/song/$radioSongId",
                                     songid = radioSongId,
-                                    title = songInfo.getString("musicName", ""),
+                                    title = songInfo.getString("songName", ""),
                                     author = radioAuthor,
-                                    url = songInfo.getString("songAuditionUrl", ""),
-                                    lrc = songInfo.getString("dynamicLyric", ""),
-                                    pic = songInfo.getString("largePic", ""),
-                                    albumName = songInfo.getString("albumName", "")
+                                    url = songInfo.getString("listenUrl", "qq"),
+                                    lrc = songInfo.getString("dynamicLyric", "11"),
+                                    pic = songInfo.getString("picL", ""),
+                                    albumName = songInfo.getString("albumName", "11")
                             )
                         }
                     } catch (e: Exception) {

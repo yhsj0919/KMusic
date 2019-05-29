@@ -82,6 +82,7 @@ object MiguImpl : Impl {
 
     /**@param key 关键字
      * @param page 页数
+     * @param num 每页条数
      * 搜索
      */
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {

@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
     val startTime = System.currentTimeMillis()
     println(startTime)
 
-    val resp = XiamiImpl.search(key = songName!!, num = 15)
+    val resp = BaiduImpl.search(key = songName!!, num = 2)
 
     println(System.currentTimeMillis() - startTime)
 

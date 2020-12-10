@@ -8,6 +8,8 @@ import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.utils.future
+import xyz.yhsj.utils.MD5
+import java.util.*
 
 
 /**
@@ -36,18 +38,27 @@ object BaiduImpl : Impl {
      * 根据类型,获取歌曲排行榜详情
      * http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&type=1&size=10&offset=0
      */
-    override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
+    override fun getSongTopDetail(
+        topId: String,
+        topType: String,
+        topKey: String,
+        page: Int,
+        num: Int
+    ): MusicResp<List<Song>> {
         return try {
-            val resp = get(url = "http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&type=$topId&size=$num&offset=${num * (page - 1)}"
-                    , headers = mapOf("Referer" to "http://music.baidu.com/",
+            val resp = get(
+                url = "http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billList&format=json&type=$topId&size=$num&offset=${num * (page - 1)}",
+                headers = mapOf(
+                    "Referer" to "http://music.baidu.com/",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
-            ))
+                )
+            )
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
                 val songList = radioData
-                        .getJSONArray("song_list")
+                    .getJSONArray("song_list")
 
                 val songIds = songList.map {
                     (it as JSONObject).getString("song_id")
@@ -67,16 +78,19 @@ object BaiduImpl : Impl {
      */
     override fun getSongTop(): MusicResp<List<MusicTop>> {
         return try {
-            val resp = get(url = "http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billCategory&format=json"
-                    , headers = mapOf("Referer" to "http://music.baidu.com/",
+            val resp = get(
+                url = "http://musicapi.qianqian.com/v1/restserver/ting?method=baidu.ting.billboard.billCategory&format=json",
+                headers = mapOf(
+                    "Referer" to "http://music.baidu.com/",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
-            ))
+                )
+            )
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
                 val songList = radioData
-                        .getJSONArray("content")
+                    .getJSONArray("content")
 
                 val tops = songList.map {
                     val topObj = it as JSONObject
@@ -97,26 +111,32 @@ object BaiduImpl : Impl {
     }
 
     /**
-     * 搜索
+     * 搜索，不支持分页
      */
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
-            //http://musicapi.taihe.com/v1/restserver/ting?from=webapp_music&format=json&method=baidu.ting.search.merge&query=%E8%96%9B%E4%B9%8B%E8%B0%A6&page_size=20&page_no=0&type=0,1,2,5,7
-            val resp = get(url = "http://musicapi.taihe.com/v1/restserver/ting?method=baidu.ting.search.merge&format=json&query=$key&page_no=$page&page_size=$num"
-                    , headers = mapOf("Referer" to "http://music.baidu.com/",
+
+            val time = Date().time / 1000
+            val sign = sign(time, key)
+
+            //https://music.taihe.com/v1/search?sign=fa717a728981421efcda2482a67235a3&word=薛之谦&timestamp=1607563076
+            val resp = get(
+                url = "https://music.taihe.com/v1/search?sign=$sign&word=$key&timestamp=$time",
+                headers = mapOf(
+                    "Referer" to "http://music.baidu.com/",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
-            ))
+                )
+            )
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
                 val songList = radioData
-                        .getJSONObject("result")
-                        .getJSONObject("song_info")
-                        .getJSONArray("song_list")
+                    .getJSONObject("data")
+                    .getJSONArray("typeTrack")
 
                 val songIds = songList.map {
-                    (it as JSONObject).getString("song_id")
+                    (it as JSONObject).getString("id")
                 }
                 val musicData = getSongById(songIds)
                 musicData
@@ -128,61 +148,73 @@ object BaiduImpl : Impl {
     }
 
     override fun getSongById(songIds: List<String>): MusicResp<List<Song>> {
-        val songId = songIds.joinToString(",")
-
-
         val songs: List<Song> =
-                songIds.future { songId ->
-                    try {
-                        //http://musicapi.taihe.com/v1/restserver/ting?format=json&from=webapp_music&method=baidu.ting.song.playAAC&songid=100575177
-                        val songResp = get(url = "http://musicapi.taihe.com/v1/restserver/ting?format=json&from=webapp_music&method=baidu.ting.song.play&songid=$songId",
-                                headers = mapOf("Referer" to "music.baidu.com/song/$songId",
-                                        "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
-                        if (songResp.statusCode != 200) {
-                            Song(
-                                    site = "baidu",
-                                    code = songResp.statusCode,
-                                    msg = "网络异常",
-                                    songid = songId)
-                        } else {
+            songIds.future { songId ->
+                try {
+                    //http://musicapi.taihe.com/v1/restserver/ting?format=json&from=webapp_music&method=baidu.ting.song.playAAC&songid=100575177
+                    val time = Date().time / 1000
+                    val sign = sign(time, songId)
 
-                            val songInfo = songResp.jsonObject
-
-                            Song(
-                                    site = "baidu",
-                                    link = "http://music.baidu.com/song/$songId",
-                                    songid = songId,
-                                    title = songInfo.getJSONObject("songinfo").getString("title"),
-                                    author = songInfo.getJSONObject("songinfo").getString("author"),
-                                    url = songInfo.getJSONObject("bitrate").getString("file_link"),
-                                    lrc = getLrcById(songInfo.getJSONObject("songinfo").getString("lrclink")),
-                                    pic = songInfo.getJSONObject("songinfo").getString("pic_radio"),
-                                    albumName = songInfo.getJSONObject("songinfo").getString("album_title")
-                            )
-
-
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        Song(
-                                site = "baidu",
-                                code = 500,
-                                msg = e.message ?: "未知异常",
-                                songid = songId
+                    val songResp = get(
+                        url = "https://music.taihe.com/v1/song/tracklink?sign=$sign&TSID=$songId&timestamp=$time",
+                        headers = mapOf(
+                            "Referer" to "music.baidu.com/song/$songId",
+                            "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
                         )
-                    }
+                    )
+                    if (songResp.statusCode != 200) {
+                        Song(
+                            site = "baidu",
+                            code = songResp.statusCode,
+                            msg = "网络异常",
+                            songid = songId
+                        )
+                    } else {
 
+                        val songInfo = songResp.jsonObject
+
+//                        println(songInfo)
+
+                        Song(
+                            site = "baidu",
+                            link = "http://music.baidu.com/song/$songId",
+                            songid = songId,
+                            title = songInfo.getJSONObject("data").getString("title"),
+                            author = songInfo.getJSONObject("data").getJSONArray("artist")
+                                .joinToString(",") { (it as JSONObject).getString("name") },
+                            url = songInfo.getJSONObject("data").getString("path"),
+                            lrc = getLrcById(songInfo.getJSONObject("data").getString("lyric")),
+                            pic = songInfo.getJSONObject("data").getString("pic"),
+                            albumName = songInfo.getJSONObject("data").getString("albumTitle")
+                        )
+
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Song(
+                        site = "baidu",
+                        code = 500,
+                        msg = e.message ?: "未知异常",
+                        songid = songId
+                    )
                 }
+
+            }
 
         return MusicResp.success(data = songs)
     }
 
     override fun getLrcById(songId: String): String {
         return try {
-            val songResp = get(url = songId,
-                    timeout = 5.0,
-                    headers = mapOf("Referer" to "http://music.baidu.com/",
-                            "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
+            val songResp = get(
+                url = songId,
+                timeout = 5.0,
+                headers = mapOf(
+                    "Referer" to "http://music.baidu.com/",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+                )
+            )
             if (songResp.statusCode == 200) {
                 val songInfo = songResp.text
                 songInfo
@@ -195,4 +227,13 @@ object BaiduImpl : Impl {
             "[00:00:00]此歌曲可能没有歌词"
         }
     }
+
+
+    private fun sign(time: Long, keyword: String): String {
+        val secret = "0b50b02fd0d73a9c4c8c3a781c30845f"
+        val params = "timestamp=$time&word=$keyword$secret"
+
+        return MD5.md5(params)
+    }
+
 }

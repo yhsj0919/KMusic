@@ -150,6 +150,7 @@ object NeteaseImpl : Impl {
 
                 val songs = songList.future {
                     val song = it as JSONObject
+
                     val songId = song.getLong("id").toString()
                     val albumName = song.getJSONObject("al").getString("name")
 

@@ -1,6 +1,7 @@
 package xyz.yhsj.kmusic
 
 import xyz.yhsj.kmusic.impl.*
+import xyz.yhsj.kmusic.site.MusicSite
 
 fun main(args: Array<String>) {
 
@@ -11,7 +12,7 @@ fun main(args: Array<String>) {
     val startTime = System.currentTimeMillis()
     println(startTime)
 
-    val resp = BaiduImpl.search(key = songName!!, num = 2)
+    val resp = KMusic.search(site = MusicSite.QQ,key = songName!!, num = 2,)
 
     println(System.currentTimeMillis() - startTime)
 

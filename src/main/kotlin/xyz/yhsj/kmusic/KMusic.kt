@@ -19,7 +19,7 @@ object KMusic {
         MusicSite.BAIDU -> BaiduImpl
         MusicSite.QQ -> QQImpl
         MusicSite.NETEASE -> NeteaseImpl
-        MusicSite.XIAMI -> XiamiImpl
+//        MusicSite.XIAMI -> XiamiImpl
         MusicSite.KUGOU -> KugouImpl
         MusicSite.KUWO -> KuwoImpl
         MusicSite.MIGU -> MiguImpl
@@ -33,7 +33,7 @@ object KMusic {
         MusicSite.BAIDU -> BaiduImpl
         MusicSite.QQ -> QQImpl
         MusicSite.NETEASE -> NeteaseImpl
-        MusicSite.XIAMI -> XiamiImpl
+//        MusicSite.XIAMI -> XiamiImpl
         MusicSite.KUGOU -> KugouImpl
         MusicSite.KUWO -> KuwoImpl
         MusicSite.MIGU -> MiguImpl
@@ -47,7 +47,7 @@ object KMusic {
         MusicSite.BAIDU -> BaiduImpl
         MusicSite.QQ -> QQImpl
         MusicSite.NETEASE -> NeteaseImpl
-        MusicSite.XIAMI -> XiamiImpl
+//        MusicSite.XIAMI -> XiamiImpl
         MusicSite.KUGOU -> KugouImpl
         MusicSite.KUWO -> KuwoImpl
         MusicSite.MIGU -> MiguImpl
@@ -60,7 +60,7 @@ object KMusic {
     fun searchAll(key: String, page: Int = 1, num: Int = 1): MusicResp<List<Song>> {
 
         val results =
-                arrayOf(MusicSite.BAIDU, MusicSite.QQ, MusicSite.NETEASE, MusicSite.XIAMI, MusicSite.KUGOU, MusicSite.KUWO, MusicSite.MIGU)
+                arrayOf(MusicSite.BAIDU, MusicSite.QQ, MusicSite.NETEASE, MusicSite.KUGOU, MusicSite.KUWO, MusicSite.MIGU)
                         .future {
                             search(key, page, num, it)
                         }

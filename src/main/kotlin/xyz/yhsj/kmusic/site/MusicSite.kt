@@ -9,7 +9,7 @@ enum class MusicSite {
     //QQ
     QQ,
     //虾米
-    XIAMI,
+//    XIAMI,
     //百度
     BAIDU,
     //酷狗

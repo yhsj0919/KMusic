@@ -132,17 +132,17 @@ object MiguImpl : Impl {
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
-                println(resp.text)
                 val radioData = resp.jsonObject
                 val songList = radioData
                     .getJSONArray("musics")
 
                 val songs = songList.map {
                     val songInfo = (it as JSONObject)
+                    println(songInfo)
                     Song(
                         site = "migu",
-                        link = "http://music.migu.cn/v2/music/song/${songInfo.getString("id")}",
-                        songid = songInfo.getString("id"),
+                        link = "https://music.migu.cn/v3/music/song/${songInfo.getString("copyrightId")}",
+                        songid = songInfo.getString("copyrightId"),
                         title = songInfo.getString("songName", ""),
                         author = songInfo.getString("singerName", ""),
                         url = songInfo.getString("mp3", ""),

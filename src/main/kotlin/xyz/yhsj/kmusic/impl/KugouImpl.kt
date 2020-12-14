@@ -35,20 +35,29 @@ object KugouImpl : Impl {
      * http://m.kugou.com/rank/info/?rankid=6666&page=1&cmd=10&json=true
      * http://mobilecdn.kugou.com/api/v3/rank/song?page=1&rankid=6666&pagesize=10
      */
-    override fun getSongTopDetail(topId: String, topType: String, topKey: String, page: Int, num: Int): MusicResp<List<Song>> {
+    override fun getSongTopDetail(
+        topId: String,
+        topType: String,
+        topKey: String,
+        page: Int,
+        num: Int
+    ): MusicResp<List<Song>> {
         return try {
-            val resp = get(url = "http://mobilecdn.kugou.com/api/v3/rank/song?rankid=$topId&format=json&page=$page&pagesize=$num"
-                    , headers = mapOf("Referer" to "http://m.kugou.com/rank/song",
+            val resp = get(
+                url = "http://mobilecdn.kugou.com/api/v3/rank/song?rankid=$topId&format=json&page=$page&pagesize=$num",
+                headers = mapOf(
+                    "Referer" to "http://m.kugou.com/rank/song",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
-            ))
+                )
+            )
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
 
                 val songList = radioData
-                        .getJSONObject("data")
-                        .getJSONArray("info")
+                    .getJSONObject("data")
+                    .getJSONArray("info")
 
 
                 //酷狗不支持在详情获取专辑名称
@@ -67,12 +76,12 @@ object KugouImpl : Impl {
                 }
                 //添加专辑名称
                 val musicData = getSongById(songIds)
-                        .apply {
-                            data?.map {
-                                it.albumName = albumNames[it.songid?.toUpperCase()] ?: ""
-                                it
-                            }
+                    .apply {
+                        data?.map {
+                            it.albumName = albumNames[it.songid?.toUpperCase()] ?: ""
+                            it
                         }
+                    }
                 musicData
 
             }
@@ -88,17 +97,19 @@ object KugouImpl : Impl {
      */
     override fun getSongTop(): MusicResp<List<MusicTop>> {
         return try {
-            val resp = get(url = "http://mobilecdn.kugou.com/api/v3/rank/list?plat=0&withsong=1"
-                    , headers = mapOf("Referer" to "http://m.kugou.com/rank/list",
+            val resp = get(
+                url = "http://mobilecdn.kugou.com/api/v3/rank/list?plat=0&withsong=1", headers = mapOf(
+                    "Referer" to "http://m.kugou.com/rank/list",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
-            ))
+                )
+            )
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
                 val songList = radioData
-                        .getJSONObject("data")
-                        .getJSONArray("info")
+                    .getJSONObject("data")
+                    .getJSONArray("info")
 
                 val tops = songList.map {
                     val topObj = it as JSONObject
@@ -121,18 +132,21 @@ object KugouImpl : Impl {
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         //http://ioscdn.kugou.com/api/v3/search/song?keyword=另一个童话&page=1&pagesize=15&showtype=10&plat=2&version=7910&tag=1&correct=1&privilege=1&sver=5
         return try {
-            val resp = get(url = "http://mobilecdn.kugou.com/api/v3/search/song?keyword=$key&format=json&page=$page&pagesize=$num"
-                    , headers = mapOf("Referer" to "http://m.kugou.com/v2/static/html/search.html",
+            val resp = get(
+                url = "http://mobilecdn.kugou.com/api/v3/search/song?keyword=$key&format=json&page=$page&pagesize=$num",
+                headers = mapOf(
+                    "Referer" to "http://m.kugou.com/v2/static/html/search.html",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
-            ))
+                )
+            )
             if (resp.statusCode != 200) {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
 
                 val songList = radioData
-                        .getJSONObject("data")
-                        .getJSONArray("info")
+                    .getJSONObject("data")
+                    .getJSONArray("info")
 
 
                 //酷狗不支持在详情获取专辑名称
@@ -151,12 +165,12 @@ object KugouImpl : Impl {
                 }
                 //添加专辑名称
                 val musicData = getSongById(songIds)
-                        .apply {
-                            data?.map {
-                                it.albumName = albumNames[it.songid?.toUpperCase()] ?: ""
-                                it
-                            }
+                    .apply {
+                        data?.map {
+                            it.albumName = albumNames[it.songid?.toUpperCase()] ?: ""
+                            it
                         }
+                    }
                 musicData
 
             }
@@ -169,57 +183,58 @@ object KugouImpl : Impl {
     override fun getSongById(songIds: List<String>): MusicResp<List<Song>> {
         //使用携程并发加载
         val songs =
-                songIds.future { songId ->
-                    try {
-                        val songResp = get(url = "http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=$songId",
-                                headers = mapOf("Referer" to "http://m.kugou.com/play/info/$songId",
-                                        "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
-                        if (songResp.statusCode != 200) {
-                            Song(
-                                    site = "kugou",
-                                    code = songResp.statusCode,
-                                    msg = "网络异常",
-                                    songid = songId)
-                        } else {
-                            val songInfo = songResp.jsonObject
+            songIds.future { songId ->
+                try {
+                    val songResp = get(
+                        url = "http://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=$songId",
+                        headers = mapOf(
+                            "Referer" to "http://m.kugou.com/play/info/$songId",
+                            "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+                        )
+                    )
+                    if (songResp.statusCode != 200) {
+                        Song(
+                            site = "kugou",
+                            code = songResp.statusCode,
+                            msg = "网络异常",
+                            songid = songId
+                        )
+                    } else {
+                        val songInfo = songResp.jsonObject
 //                    val errcode = songInfo.getInt("errcode")
 //                    val error = songInfo.getString("error")
-                            val url = songInfo.getString("url")
-                            if (url.isNullOrEmpty()) {
-                                val privilege = songInfo.getInt("privilege")
-                                Song(
-                                        site = "kugou",
-                                        code = 403,
-                                        msg = if (privilege == 1) "源站反馈此音频需要付费" else "找不到可用的播放地址",
-                                        songid = songId)
-                            } else {
-                                val radioSongId = songInfo.getString("hash")
-                                val albumImg = songInfo.getString("album_img").replace("{size}", "400")
-                                val imgUrl = songInfo.getString("imgUrl").replace("{size}", "400")
 
-                                Song(
-                                        site = "kugou",
-                                        link = "http://www.kugou.com/song/#hash=$radioSongId",
-                                        songid = radioSongId,
-                                        title = songInfo.getString("songName"),
-                                        author = songInfo.getString("singerName"),
-                                        url = url,
-                                        lrc = getLrcById(radioSongId),
-                                        pic = if (albumImg.isEmpty()) imgUrl else albumImg
-//                                albumName = song.getString("albumName")
-                                )
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                        val url = songInfo.getString("url")
+                        val privilege = songInfo.getInt("privilege")
+
+                        val radioSongId = songInfo.getString("hash")
+                        val albumImg = songInfo.getString("album_img").replace("{size}", "400")
+                        val imgUrl = songInfo.getString("imgUrl").replace("{size}", "400")
+
                         Song(
-                                site = "kugou",
-                                code = 500,
-                                msg = e.message ?: "未知异常",
-                                songid = songId
+                            msg = if (url.isNullOrEmpty()) if (privilege == 1) "源站反馈此音频需要付费" else "找不到可用的播放地址" else "",
+                            site = "kugou",
+                            link = "http://www.kugou.com/song/#hash=$radioSongId",
+                            songid = radioSongId,
+                            title = songInfo.getString("songName"),
+                            author = songInfo.getString("singerName"),
+                            url = url,
+                            lrc = getLrcById(radioSongId),
+                            pic = if (albumImg.isEmpty()) imgUrl else albumImg
+//                                albumName = song.getString("albumName")
                         )
                     }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Song(
+                        site = "kugou",
+                        code = 500,
+                        msg = e.message ?: "未知异常",
+                        songid = songId
+                    )
                 }
+            }
 
         return MusicResp.success(data = songs)
 
@@ -228,10 +243,14 @@ object KugouImpl : Impl {
     override fun getLrcById(songId: String): String {
         return try {
             val url = "http://m.kugou.com/app/i/krc.php?cmd=100&timelength=999999&hash=$songId"
-            val songResp = get(url = url,
-                    timeout = 5.0,
-                    headers = mapOf("Referer" to "http://m.kugou.com/play/info/$songId",
-                            "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"))
+            val songResp = get(
+                url = url,
+                timeout = 5.0,
+                headers = mapOf(
+                    "Referer" to "http://m.kugou.com/play/info/$songId",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+                )
+            )
             if (songResp.statusCode == 200) {
                 val songInfo = songResp.text
                 songInfo

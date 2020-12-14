@@ -229,11 +229,26 @@ object QQImpl : Impl {
                     .getJSONObject("song")
                     .getJSONArray("list")
 
-                val songIds = songList.map {
-                    (it as JSONObject).getString("songmid")
+                val songs = songList.map {
+                    val songInfo = (it as JSONObject)
+                    val songmid = songInfo.getString("songmid")
+                    val albummid = songInfo.getString("albummid")
+                    Song(
+                        site = "qq",
+                        link = "http://y.qq.com/n/yqq/song/$songmid.html",
+                        songid = songmid,
+                        title = songInfo.getString("songname"),
+                        author = songInfo.getJSONArray("singer")
+                            .joinToString(",") { (it as JSONObject).getString("name") },
+                        url = getSongUrl(songmid),
+                        lrc = getLrcById(songmid),
+                        pic = "https://y.gtimg.cn/music/photo_new/T002R300x300M000${albummid}_1.jpg?max_age=2592000",
+                        albumName = songInfo.getString("albumname")
+                    )
+
+
                 }
-                val musicData = getSongById(songIds)
-                musicData
+                return MusicResp.success(data = songs)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -255,7 +270,7 @@ object QQImpl : Impl {
 
             val vkeyData = if (vkeyResp.statusCode == 200) {
 
-                println(">>>>>>>>>" + vkeyResp.text)
+                println(vkeyResp.text)
 
                 vkeyResp.jsonObject
             } else {
@@ -379,7 +394,47 @@ object QQImpl : Impl {
             .replace("&#46;", ".")
             .replace("&#58;", ":")
             .replace("&#64;", "@")
+            .replace("&#95;", "_")
             .replace("&#124;", "|")
 
+    /**
+     * 根据ID获取播放地址
+     *
+     */
 
+    fun getSongUrl(songId: String): String {
+        //"https://u.y.qq.com/cgi-bin/musicu.fcg?data={\"req\":{\"module\":\"CDN.SrfCdnDispatchServer\",\"method\":\"GetCdnDispatch\",\"param\":{\"guid\":\"3982823384\",\"calltype\":0,\"userip\":\"\"}},\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\":\"CgiGetVkey\",\"param\":{\"guid\":\"3982823384\",\"songmid\":[\"003COGf722WjdV\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}},\"comm\":{\"uin\":0,\"format\":\"json\",\"ct\":24,\"cv\":0}}",
+        return try {
+            val songResp = get(
+                url = "https://u.y.qq.com/cgi-bin/musicu.fcg?data={\"req\":{\"module\":\"CDN.SrfCdnDispatchServer\",\"method\":\"GetCdnDispatch\",\"param\":{\"guid\":\"3982823384\",\"calltype\":0,\"userip\":\"\"}},\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\":\"CgiGetVkey\",\"param\":{\"guid\":\"3982823384\",\"songmid\":[\"$songId\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}},\"comm\":{\"uin\":0,\"format\":\"json\",\"ct\":24,\"cv\":0}}",
+                timeout = 5.0,
+                headers = mapOf(
+                    "Referer" to "http://y.qq.com",
+                    "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
+                )
+            )
+            if (songResp.statusCode == 200) {
+                val songInfo = songResp.jsonObject
+
+                val host = songInfo.getJSONObject("req").getJSONObject("data").getJSONArray("freeflowsip").getString(0)
+
+
+                val url = songInfo.getJSONObject("req_0").getJSONObject("data").getJSONArray("midurlinfo")
+                    .getJSONObject(0).getString("purl")
+
+                if (host.isNullOrEmpty() || url.isNullOrEmpty()) {
+                    ""
+                } else {
+                    host + url
+                }
+
+            } else {
+                ""
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println("获取Url出现异常")
+            ""
+        }
+    }
 }

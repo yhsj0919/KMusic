@@ -274,7 +274,6 @@ object KuwoImpl : Impl {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
-                println(radioData)
                 val songList = radioData
                     .getJSONObject("data")
                     .getJSONArray("list")
@@ -442,14 +441,14 @@ object KuwoImpl : Impl {
      * br=128kmp3 这个参数控制MP3的码率，这里可以提到256320
      *
      */
-    private fun getSongUrl(songId: String): String {
+    fun getSongUrl(songId: String): String {
         //http://kuwo.cn/url?format=mp3&rid=157191563&response=url&type=convert_url3&br=128kmp3&from=web&t=1607584876054&httpsStatus=1&reqId=4a56fb61-3ab8-11eb-ac26-d7ac0c330124
         return try {
             val songResp = get(
                 url = "http://kuwo.cn/url?format=mp3&rid=$songId&response=url&type=convert_url3&br=128kmp3&from=web&t=${Date().time}&httpsStatus=1&reqId=4a56fb61-3ab8-11eb-ac26-d7ac0c330124",
                 timeout = 5.0,
                 headers = mapOf(
-                    "Referer" to "http://m.10086.cn",
+                    "Referer" to "http://kuwo.cn",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
                 )
             )

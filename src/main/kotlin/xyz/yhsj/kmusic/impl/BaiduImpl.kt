@@ -137,7 +137,7 @@ object BaiduImpl : Impl {
 
                 val songIds = songList.map {
                     (it as JSONObject).getString("id")
-                }
+                }.take(num)
                 val musicData = getSongById(songIds)
                 musicData
             }

@@ -157,13 +157,13 @@ object BaiduImpl : Impl {
         val songs: List<Song> =
             songIds.future { songId ->
                 try {
-                    //http://musicapi.taihe.com/v1/restserver/ting?format=json&from=webapp_music&method=baidu.ting.song.playAAC&songid=100575177
+                    //https://api-qianqian.taihe.com/v1/song/tracklink?TSID=T10058207752&timestamp=1608111856885&sign=c5cfb06258c4ca3d326680873ba7df6f
                     val time = Date().time / 1000
-                    val params="TSID=$songId&timestamp=$time"
+                    val params = "TSID=$songId&timestamp=$time"
                     val sign = sign(params)
 
                     val songResp = get(
-                        url = "https://music.taihe.com/v1/song/tracklink?$params&sign=$sign",
+                        url = "https://api-qianqian.taihe.com/v1/song/tracklink?$params&sign=$sign",
                         headers = mapOf(
                             "Referer" to "music.baidu.com/song/$songId",
                             "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"

@@ -17,6 +17,8 @@ import java.util.*
  */
 
 object BaiduImpl : Impl {
+
+
     /**
      *根据ID获取专辑详情
      * @param albumId 专辑ID
@@ -117,11 +119,13 @@ object BaiduImpl : Impl {
         return try {
 
             val time = Date().time / 1000
-            val sign = sign(time, key)
+            val params = "pageNo=$page&pageSize=$num&timestamp=$time&type=1&word=$key"
+            val sign = sign(params)
 
             //https://music.taihe.com/v1/search?sign=fa717a728981421efcda2482a67235a3&word=薛之谦&timestamp=1607563076
+            //https://api-qianqian.taihe.com/v1/search?pageNo=1&pageSize=20&timestamp=1608106922425&type=1&word=薛之谦&sign=d8de29b0be45085625cc75cefa3f4858
             val resp = get(
-                url = "https://music.taihe.com/v1/search?sign=$sign&word=$key&timestamp=$time",
+                url = "https://api-qianqian.taihe.com/v1/search?$params&sign=$sign",
                 headers = mapOf(
                     "Referer" to "http://music.baidu.com/",
                     "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
@@ -131,13 +135,15 @@ object BaiduImpl : Impl {
                 MusicResp.failure(code = resp.statusCode, msg = "请求失败")
             } else {
                 val radioData = resp.jsonObject
+                println(radioData)
+
                 val songList = radioData
                     .getJSONObject("data")
                     .getJSONArray("typeTrack")
 
                 val songIds = songList.map {
                     (it as JSONObject).getString("id")
-                }.take(num)
+                }
                 val musicData = getSongById(songIds)
                 musicData
             }
@@ -153,10 +159,11 @@ object BaiduImpl : Impl {
                 try {
                     //http://musicapi.taihe.com/v1/restserver/ting?format=json&from=webapp_music&method=baidu.ting.song.playAAC&songid=100575177
                     val time = Date().time / 1000
-                    val sign = sign(time, songId)
+                    val params="TSID=$songId&timestamp=$time"
+                    val sign = sign(params)
 
                     val songResp = get(
-                        url = "https://music.taihe.com/v1/song/tracklink?sign=$sign&TSID=$songId&timestamp=$time",
+                        url = "https://music.taihe.com/v1/song/tracklink?$params&sign=$sign",
                         headers = mapOf(
                             "Referer" to "music.baidu.com/song/$songId",
                             "User-Agent" to "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1"
@@ -229,11 +236,12 @@ object BaiduImpl : Impl {
     }
 
 
-    private fun sign(time: Long, keyword: String): String {
+    private fun sign(params: String): String {
         val secret = "0b50b02fd0d73a9c4c8c3a781c30845f"
-        val params = "timestamp=$time&word=$keyword$secret"
 
-        return MD5.md5(params)
+        val data = "$params$secret"
+
+        return MD5.md5(data)
     }
 
 }

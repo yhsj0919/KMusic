@@ -238,9 +238,7 @@ object BaiduImpl : Impl {
 
     private fun sign(params: String): String {
         val secret = "0b50b02fd0d73a9c4c8c3a781c30845f"
-
         val data = "$params$secret"
-
         return MD5.md5(data)
     }
 

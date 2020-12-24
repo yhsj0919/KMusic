@@ -8,7 +8,7 @@ import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.utils.future
-import xyz.yhsj.utils.MD5
+import xyz.yhsj.kmusic.utils.MD5
 import java.util.*
 
 

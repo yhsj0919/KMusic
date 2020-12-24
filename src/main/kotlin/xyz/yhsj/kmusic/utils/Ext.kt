@@ -1,6 +1,5 @@
 package xyz.yhsj.kmusic.utils
 
-import xyz.yhsj.utils.MD5
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 

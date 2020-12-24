@@ -184,17 +184,17 @@ object XiamiImpl : Impl {
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
 
         return try {
-            if (!cookie.containsKey("xm_sg_tk")) {
-                getCookie()
-            }
-            val params = "{\"key\":\"$key\",\"pagingVO\":{\"page\":$page,\"pageSize\":$num}}"
-            val tk = getTK(api = "search/searchSongs", params = params)
+//            if (!cookie.containsKey("xm_sg_tk")) {
+//                getCookie()
+//            }
+//            val params = "{\"key\":\"$key\",\"pagingVO\":{\"page\":$page,\"pageSize\":$num}}"
+//            val tk = getTK(api = "search/searchSongs", params = params)
             val resp = get(
-                url = "https://www.xiami.com/api/search/searchSongs?_q=$params&_s=$tk",
+                url = "https://api.xiami.com/web?&app_key=1&key=$key&limit=$num&page=$page&r=search/songs&v=2.0",
                 cookies = cookie,
                 headers = mapOf(
-                    "Referer" to "https://www.xiami.com/search?key=$key",
-                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
+                    "Referer" to "https://www.xiami.com",
+                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66"
                 )
             )
             if (resp.statusCode != 200) {
@@ -204,26 +204,21 @@ object XiamiImpl : Impl {
 
                 val radioData = resp.jsonObject
                 val songList = radioData
-                    .getJSONObject("result")
                     .getJSONObject("data")
                     .getJSONArray("songs")
                 val songs = songList.map {
                     val song = it as JSONObject
-                    val songId = song.getLong("songId").toString()
+                    val songId = song.getLong("song_id").toString()
                     Song(
                         site = "xiami",
                         link = "http://www.xiami.com/song/$songId",
                         songid = songId,
-                        title = song.getString("songName"),
-                        author = song.getString("singers"),
-//                        url = getSongUrl(songId),
-                        lrc = try {
-                            song.getJSONObject("lyricInfo").getString("lyricFile")
-                        } catch (e: Exception) {
-                            "[00:00:00]此歌曲可能没有歌词"
-                        },
-                        pic = song.getString("albumLogo"),
-                        albumName = song.getString("albumName")
+                        title = song.getString("song_name"),
+                        author = song.getString("artist_name"),
+                        url = song.getString("listen_file"),
+//                        lrc = getLrcById(song.getString("lyric")),
+                        pic = song.getString("album_logo"),
+                        albumName = song.getString("album_name")
                     )
                 }
                 MusicResp.success(data = songs)
@@ -289,8 +284,6 @@ object XiamiImpl : Impl {
                 headers = mapOf(
                     "Referer" to "http://www.xiami.com",
                     "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36",
-                    "Cookie" to " xm_sg_tk=ce1573ccfada2c4d438b29a3d7499655_1604209347226; xm_sg_tk.sig=vdhhrB8euKwEc9FXSx7_0VEhzY8DuyAknOn1NBkrIto;"
-
                 )
             )
             if (songResp.statusCode == 200) {

@@ -110,6 +110,72 @@ object BaiduMusic {
         return baiduMusic.get(urlString = "artist/info?$params&sign=$sign")
     }
 
+    /**
+     * 歌手热门歌曲
+     * @param artistCode 歌手Id
+     */
+    suspend inline fun <reified T> artistSong(artistCode: String, page: Int = 1, size: Int = 20): T {
+        val params = "artistCode=$artistCode&pageNo=$page&pageSize=$size&timestamp=${Date().time}"
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "artist/song?$params&sign=$sign")
+    }
+
+    /**
+     * 歌手热门专辑
+     * @param artistCode 歌手Id
+     */
+    suspend inline fun <reified T> artistAlbum(artistCode: String, page: Int = 1, size: Int = 20): T {
+        val params = "artistCode=$artistCode&pageNo=$page&pageSize=$size&timestamp=${Date().time}"
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "artist/album?$params&sign=$sign")
+    }
+
+    /**
+     * 搜索
+     * @param type 0全部、1单曲、3专辑、2歌手
+     * 0没有分页，其他有 pageNo、pageSize
+     * @param word 搜索关键词
+     */
+    suspend inline fun <reified T> search(type: Int, word: String, page: Int = 1, size: Int = 20): T {
+        val params = if (type != 0) {
+            "timestamp=${Date().time}&type=$type&word=$word"
+        } else {
+            "pageNo=$page&pageSize=$size&timestamp=${Date().time}&type=$type&word=$word"
+        }
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "search?$params&sign=$sign")
+    }
+
+
+    /**
+     * 搜索热词
+     * @param word 搜索关键词
+     */
+    suspend inline fun <reified T> searchSug(word: String): T {
+        val params = "timestamp=${Date().time}&word=$word"
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "search/sug?$params&sign=$sign")
+    }
+
+
+    /**
+     * 榜单分类
+     */
+    suspend inline fun <reified T> bdCategory(): T {
+        val params = "timestamp=${Date().time}"
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "bd/category?$params&sign=$sign")
+    }
+
+    /**
+     * 榜单列表
+     */
+    suspend inline fun <reified T> bdList(bdid: String, page: Int = 1, size: Int = 20): T {
+        val params = "bdid=257851&pageNo=1&pageSize=20&timestamp=${Date().time}"
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "bd/list?$params&sign=$sign")
+    }
+
 
     /**
      * 签名算法
@@ -123,7 +189,7 @@ object BaiduMusic {
 
 
 suspend fun main() {
-    val resp = BaiduMusic.artistInfo<String>("A10048883")
+    val resp = BaiduMusic.bdList<String>(bdid = "257851")
 
     println(resp)
 

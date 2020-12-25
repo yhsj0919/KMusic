@@ -87,6 +87,7 @@ type:
 
 
 [搜索](https://api-qianqian.taihe.com/v1/search?timestamp=1608608525310&type=0&word=%E8%96%9B%E4%B9%8B%E8%B0%A6&sign=b932c0e706d38c28bb8251869aa52949)
+[搜索](https://api-qianqian.taihe.com/v1/search?pageNo=1&pageSize=20&timestamp=1608859692317&type=1&word=%E8%96%9B%E4%B9%8B%E8%B0%A6&sign=09cff6888257567afba7257c54d7f8cb)
 
 [热词提示](https://api-qianqian.taihe.com/v1/search/sug?timestamp=1608616072902&word=wohewode&sign=79fa197ba1437570fd708bfb3a351042)
 

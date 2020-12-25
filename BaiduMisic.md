@@ -99,13 +99,13 @@ type:
 
 ### 歌曲分类(流派,歌单)
 
-[歌单信息](https://api-qianqian.taihe.com/v1/tracklist/info?id=271333&pageNo=1&pageSize=50&timestamp=1608606764153&sign=728e88732853e8cff260fc9893fa9ed3)
-
 [歌曲分类](https://api-qianqian.taihe.com/v1/tracklist/category?timestamp=1608613815703&sign=88f1f4559cb9e65553707b8ff72044c0)
 
 [分类详情](https://api-qianqian.taihe.com/v1/tracklist/list?pageNo=1&pageSize=20&subCateId=2368&timestamp=1608613879054&sign=dd3e0907c6ec357a999685642a74ec36)
 
 [推荐歌单](https://api-qianqian.taihe.com/v1/tracklist/list?pageNo=1&pageSize=20&timestamp=1608614026245&sign=e246ddb81e2b7e6c7f4e7e330dd47a2e)
+
+[歌单信息](https://api-qianqian.taihe.com/v1/tracklist/info?id=271333&pageNo=1&pageSize=50&timestamp=1608606764153&sign=728e88732853e8cff260fc9893fa9ed3)
 
 ### 手机号登陆
 

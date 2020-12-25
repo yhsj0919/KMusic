@@ -171,9 +171,43 @@ object BaiduMusic {
      * 榜单列表
      */
     suspend inline fun <reified T> bdList(bdid: String, page: Int = 1, size: Int = 20): T {
-        val params = "bdid=257851&pageNo=1&pageSize=20&timestamp=${Date().time}"
+        val params = "bdid=$bdid&pageNo=$page&pageSize=$size&timestamp=${Date().time}"
         val sign = sign(params)
         return baiduMusic.get(urlString = "bd/list?$params&sign=$sign")
+    }
+
+
+    /**
+     * 歌单分类
+     */
+    suspend inline fun <reified T> trackListCategory(): T {
+        val params = "timestamp=${Date().time}"
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "tracklist/category?$params&sign=$sign")
+    }
+
+    /**
+     * 歌单分类详情
+     */
+    suspend inline fun <reified T> trackListList(subCateId: String? = null, page: Int = 1, size: Int = 20): T {
+        val params = if (subCateId == null) {
+            "pageNo=$page&pageSize=$size&timestamp=${Date().time}"
+        } else {
+            "pageNo=$page&pageSize=$size&subCateId=$subCateId&timestamp=${Date().time}"
+        }
+
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "tracklist/list?$params&sign=$sign")
+    }
+
+
+    /**
+     * 歌单详情、推荐歌单
+     */
+    suspend inline fun <reified T> trackListInfo(id: String, page: Int = 1, size: Int = 20): T {
+        val params = "id=$id&pageNo=$page&pageSize=$size&timestamp=${Date().time}"
+        val sign = sign(params)
+        return baiduMusic.get(urlString = "tracklist/info?$params&sign=$sign")
     }
 
 
@@ -189,7 +223,7 @@ object BaiduMusic {
 
 
 suspend fun main() {
-    val resp = BaiduMusic.bdList<String>(bdid = "257851")
+    val resp = BaiduMusic.trackListList<String>()
 
     println(resp)
 

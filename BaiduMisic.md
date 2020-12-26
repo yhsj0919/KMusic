@@ -41,6 +41,7 @@ banner详情也用
 [新歌推荐](https://api-qianqian.taihe.com/v1/song/list?pageNo=1&pageSize=20&timestamp=1608614160873&sign=09a0a2d0c4007ae4bc30151a46766e83)
 
 [歌曲详情](https://api-qianqian.taihe.com/v1/song/tracklink?TSID=T10058580675&timestamp=1608606920969&sign=dde6cc223c9a02f798cd232becea2053)
+http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=8.0.0.1&channel=1382d&operator=-1&method=baidu.ting.song.down&format=json&from=android&songid=597854185&ts=1608952842223&dt=320&mul=0&e=puYHwvSUAUgGo1i7ZI4Mxo0TWm9H2tP4QStrs7OKdJ1heH4pv20gM3WbYAq7W1nH&nw=2&usup=1
 
 ### 歌手列表
 
@@ -156,15 +157,44 @@ timestamp=1608617893884&sign=dc5d907a2aa189ffed561b40e6d697d0
 `authorization:access_token ZGU1JTljMjBkOTZmODQyNzQ4N2NzMzQyMzM5YjYxMzM=`
 </details>
 
+<details>
+<summary>修改说明</summary>
+修改客户信息用post
+age=25&avatar=https://avatar-qianqian.taihe.com/c055c43e759dcfc887.jpeg&birth=1995-01-01&nickname=测试&sex=1&timestamp=1608965799010&sign=c51b66996ad6fb12d9
+</details>
+
 [账户信息](https://api-qianqian.taihe.com/v1/account/info?timestamp=1608614552995&sign=9bdbaa168656cf59087b814767d0aa3e)
 
-[账户歌曲列表](https://api-qianqian.taihe.com/v1/account/songlist?pageNo=1&pageSize=20&timestamp=1608617256944&sign=c9316dff33e92092120a5e068267ef36)
+<details>
+<summary>头像说明</summary>
+Content-Disposition: form-data; name="targetPath"
+Content-Length: 37
+06453255cb700104f052a9abbacd5c78.jpeg
+
+Content-Disposition: form-data; name="secureKey"
+Content-Length: 32
+140598208fb5921d01a00b9cbf210e4f(这个貌似是个MD5,暂时不知道怎么计算，和上面的targetPath有关)
+
+Content-Disposition: form-data; name="file"; filename="06453255cb700104f052a9abbacd5c78.jpeg"
+Content-Type: image/jpeg Content-Length: 11040
+你要上传的头像
+
+</details>
+
+[上传头像](https://upload-avatar-qianqian.taihe.com/UPLOAD/upload)
+
+[账户歌曲列表，不知道干啥用的，貌似没展示的地方](https://api-qianqian.taihe.com/v1/account/songlist?pageNo=1&pageSize=20&timestamp=1608617256944&sign=c9316dff33e92092120a5e068267ef36)
 
 [账户收藏等信息](https://api-qianqian.taihe.com/v1/account/amount?timestamp=1608617256951&sign=9bdd3cae6d72e46cac33b5fc97312ae6)
 
+<details>
+<summary>签到</summary>
+post请求
+timestamp=1608617260391&sign=7da5d83841c79e351d402630ae6b4049
+</details>
 
 [签到](https://api-qianqian.taihe.com/v1/user/points/signin)
-timestamp=1608617260391&sign=7da5d83841c79e351d402630ae6b4049
+
 ### 收藏歌曲
 
 <details>
@@ -180,7 +210,6 @@ code=T10058580675&timestamp=1608614553008&sign=8ee2bb7c11115cee8b2f81d8402e50cd
 
 [收藏歌手](https://api-qianqian.taihe.com/v1/favorite/artist/create)
 
-
 参数同上
 
 [取消收藏歌曲](https://api-qianqian.taihe.com/v1/favorite/song/delete)
@@ -195,3 +224,6 @@ code=T10058580675&timestamp=1608614553008&sign=8ee2bb7c11115cee8b2f81d8402e50cd
 
 [收藏的歌手](https://api-qianqian.taihe.com/v1/favorite/artist?pageNo=1&pageSize=20&timestamp=1608617620372&sign=872a52902a211a8946cb65ed43d8388c)
 
+
+###歌曲下载(非得让我冲会员(T_T),感觉亏了500W)
+[歌曲下载](https://api-qianqian.taihe.com/v1/song/download?TSID=T10058207752&timestamp=1608975041150&sign=d160f0e4175b377a82ceba90258aabf0)

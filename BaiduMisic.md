@@ -41,7 +41,6 @@ banner详情也用
 [新歌推荐](https://api-qianqian.taihe.com/v1/song/list?pageNo=1&pageSize=20&timestamp=1608614160873&sign=09a0a2d0c4007ae4bc30151a46766e83)
 
 [歌曲详情](https://api-qianqian.taihe.com/v1/song/tracklink?TSID=T10058580675&timestamp=1608606920969&sign=dde6cc223c9a02f798cd232becea2053)
-http://musicapi.qianqian.com/v1/restserver/ting?from=android&version=8.0.0.1&channel=1382d&operator=-1&method=baidu.ting.song.down&format=json&from=android&songid=597854185&ts=1608952842223&dt=320&mul=0&e=puYHwvSUAUgGo1i7ZI4Mxo0TWm9H2tP4QStrs7OKdJ1heH4pv20gM3WbYAq7W1nH&nw=2&usup=1
 
 ### 歌手列表
 

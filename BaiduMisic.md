@@ -224,5 +224,5 @@ code=T10058580675&timestamp=1608614553008&sign=8ee2bb7c11115cee8b2f81d8402e50cd
 [收藏的歌手](https://api-qianqian.taihe.com/v1/favorite/artist?pageNo=1&pageSize=20&timestamp=1608617620372&sign=872a52902a211a8946cb65ed43d8388c)
 
 
-###歌曲下载(非得让我冲会员(T_T),感觉亏了500W)
+###歌曲下载(非得让我冲会员(T_T),感觉亏了500W,vip歌曲需要登陆才能下载)
 [歌曲下载](https://api-qianqian.taihe.com/v1/song/download?TSID=T10058207752&timestamp=1608975041150&sign=d160f0e4175b377a82ceba90258aabf0)

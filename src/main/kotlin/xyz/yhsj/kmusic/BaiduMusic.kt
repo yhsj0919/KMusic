@@ -69,23 +69,27 @@ object BaiduMusic {
 
 
     /**
-     * 歌曲信息
+     * 歌曲信息(播放地址。Vip歌曲只能获取30秒)
      * @param tsId 歌曲Id
      */
-    suspend inline fun <reified T> songInfo(tsId: String): T {
+    suspend inline fun <reified T> songInfo(tsId: String, authorization: String = ""): T {
         val params = "TSID=$tsId&rate=320&timestamp=${Date().time}"
         val sign = sign(params)
-        return baiduMusic.get(url = "/song/tracklink?$params&sign=$sign")
+        return baiduMusic.get(url = "/song/tracklink?$params&sign=$sign") {
+            header("authorization", "access_token $authorization")
+        }
     }
 
     /**
      * 歌曲下载
      * @param tsId 歌曲Id
      */
-    suspend inline fun <reified T> songDownload(tsId: String): T {
+    suspend inline fun <reified T> songDownload(tsId: String, authorization: String = ""): T {
         val params = "TSID=$tsId&rate=320&timestamp=${Date().time}"
         val sign = sign(params)
-        return baiduMusic.get(url = "/song/download?$params&sign=$sign")
+        return baiduMusic.get(url = "/song/download?$params&sign=$sign") {
+            header("authorization", "/access_token $authorization")
+        }
     }
 
 
@@ -517,7 +521,10 @@ object BaiduMusic {
 
 
 suspend fun main() {
-    val resp = BaiduMusic.songDownload<String>(tsId = "T10038826794")
+    val resp = BaiduMusic.songDownload<String>(
+        tsId = "T10053430210",
+        authorization = "NjVhNTMzM2QyZWEyZTlhOTI5OTJiMjZiNWE2YTkwMjY="
+    )
 
     println(resp)
 

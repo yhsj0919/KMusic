@@ -39,7 +39,7 @@ https://search.kuwo.cn/r.s?pn=0&rn=100&all=%E8%96%9B%E4%B9%8B%E8%B0%A6&ft=album&
 https://search.kuwo.cn/r.s?pn=0&rn=100&lrccontent=%E8%96%9B%E4%B9%8B%E8%B0%A6&ft=music&alflac=1&newsearch=1&itemset=web_2013&client=kt&cluster=0&rformat=json&encoding=utf8&primitive=0&show_copyright_off=1&ver=mbox&pcmp4=1&plat=pc&vipver=MUSIC_9.1.1.2_BCS2&devid=38668888&newver=1&pcjson=1
 
 ###歌单详情
-http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=910553346&pn=0&rn=100&encode=utf8&keyset=pl2012&identity=kuwo&pcmp4=1&vipver=MUSIC_9.1.1.2_BCS2&newver=1
+http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=910553346&pn=0&rn=10&encode=utf8&keyset=pl2012&vipver=MUSIC_9.1.1.2_BCS2&newver=1
 
 ###电台当前歌曲
 http://musicpay.kuwo.cn/music.pay?uid=&sid=&ver=MUSIC_9.1.1.2_BCS2&src=mbox&op=query&signver=new&action=play&ids=281043&accttype=1&appuid=38668888
@@ -48,7 +48,7 @@ http://musicpay.kuwo.cn/music.pay?uid=&sid=&ver=MUSIC_9.1.1.2_BCS2&src=mbox&op=q
 http://gxh2.kuwo.cn/newradio.nr?type=30&num=5&uid=0&login=1&ver=MUSIC_9.1.1.2_BCS2&fid=-676&_=0.7321255136633402
 
 ###歌手详情
-https://search.kuwo.cn/r.s?stype=artistinfo&plat=pc&encoding=utf8&thost=search.kuwo.cn&artistid=947&vipver=MUSIC_9.1.1.2_BCS2&devid=38668888&pcjson=1
+https://search.kuwo.cn/r.s?stype=artistinfo&encoding=utf8&artistid=947&pcjson=1
 
 ###歌手单曲
 https://search.kuwo.cn/r.s?pn=0&rn=100&artistid=947&stype=artist2music&sortby=0&alflac=1&show_copyright_off=1&pcmp4=1&encoding=utf8&plat=pc&thost=search.kuwo.cn&vipver=MUSIC_9.1.1.2_BCS2&devid=38668888&newver=1&pcjson=1
@@ -62,10 +62,10 @@ https://search.kuwo.cn/r.s?pn=0&rn=100&artistid=947&stype=albumlist&sortby=1&alf
 ###歌手MV
 https://search.kuwo.cn/r.s?pn=0&rn=80&artistid=947&stype=mvlist&sortby=1&show_copyright_off=1&encoding=utf8&plat=pc&thost=search.kuwo.cn&vipver=MUSIC_9.1.1.2_BCS2&devid=38668888&pcjson=1
 
-###歌手分类
+###歌手分类  
 http://mobi.kuwo.cn/mobiweb.s?f=web&type=artist_cat_list&apiv=0
 
-###歌手列表
+###歌手列表 order=hot/order=soar
 http://mobi.kuwo.cn/mobiweb.s?f=web&type=pc_artist_list&apiv=0&rformat=json&loginUid=0&uid=38668888&prod=MUSIC_9.1.1.2_BCS2&region=0&gender=0&genre=0&prefix=&order=soar&pn=0&rn=100
 http://mobi.kuwo.cn/mobiweb.s?f=web&type=pc_artist_list&apiv=0&rformat=json&loginUid=0&uid=38668888&prod=MUSIC_9.1.1.2_BCS2&region=1&gender=1&genre=1&prefix=Z&order=&pn=0&rn=100
 
@@ -148,6 +148,9 @@ http://cdapi.kuwo.cn/artist/list?order=3&firstchar=b
 
 ###MV播放地址
 http://kuwo.cn/url?rid=156991791&response=url&format=mp4|mkv&type=convert_url&t=1609141555056&httpsStatus=1&reqId=b7544700-48e0-11eb-95f3-a91130e3f1cc
+http://kuwo.cn/url?rid=6663002&format=mp4|mkv&type=convert_url
+json格式
+http://m.kuwo.cn/newh5app/api/mobile/v1/video/info/158666298?source=7
 
 
 ###歌曲详情

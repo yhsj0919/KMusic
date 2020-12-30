@@ -41,8 +41,6 @@ val client = HttpClient(OkHttp) {
     }
 
     defaultRequest {
-        header("app-version", "v8.2.3.1")
-        header("from", "android")
         header(
             "user-agent",
             "Mozilla/5.0 (Linux; U; Android 8.0.0; zh-cn; MI 5 Build/OPR1.170623.032) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"

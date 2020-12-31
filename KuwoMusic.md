@@ -88,19 +88,24 @@ http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmTagList?loginUid=0&loginSid=0
 http://wapi.kuwo.cn/api/pc/classify/playlist/getTagList?cmd=rcm_keyword_playlist&user=0&prod=kwplayer_pc_9.1.1.2&vipver=9.1.1.2&source=kwplayer_pc_9.1.1.2&loginUid=0&loginSid=0&appUid=38668888
 
 ###歌单列表
-digest==1000,排序new/hot
 http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?loginUid=0&loginSid=0&appUid=38668888&pn=1&rn=100&order=new
+digest==1000,排序new/hot
 http://wapi.kuwo.cn/api/pc/classify/playlist/getTagPlayList?loginUid=0&loginSid=0&appUid=38668888&id=621&pn=1&rn=100
 
 digest==43专区是下面这种请求
 http://mobileinterfaces.kuwo.cn/er.s?type=get_pc_qz_data&f=web&id=140&prod=pc&ver=1
 http://mobileinterfaces.kuwo.cn/er.s?type=get_pc_qz_data&f=web&id=6&prod=pc&ver=1
 
-digest=8专区详情
+digest=8专区、歌单详情
 http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=2603442581&pn=0&rn=100&encode=utf8&keyset=pl2012&identity=kuwo&pcmp4=1&vipver=MUSIC_9.1.1.2_BCS2&newver=1
 
 digest=13相声小品下面这种
 http://mobi.kuwo.cn/mobi.s?pn=0&rn=100&albumid=10426563&f=web&q=&type=pc_music_by_album&encoding=utf8&vipver=MUSIC_9.1.1.2_BCS2&devid=38668888&newver=1&epaor=1
+
+http://mobi.kuwo.cn/mobi.s?pn=0&rn=100&albumid=5384874&f=web&q=&type=pc_music_by_album&encoding=utf8&vipver=MUSIC_9.1.1.2_BCS2&devid=38668888&newver=1&epaor=1
+
+digest=5儿童专区下面这种
+http://qukudata.kuwo.cn/q.k?op=query&cont=ninfo&node=508097&pn=0&rn=100&fmt=json&src=mbox&level=2
 
 
 ###新碟上架（专辑）
@@ -154,7 +159,8 @@ http://m.kuwo.cn/newh5app/api/mobile/v1/video/info/158666298?source=7
 
 
 ###歌曲详情
-https://kuwo.cn/api/www/music/musicInfo?mid=155925915&httpsStatus=1&reqId=87e511b0-48e1-11eb-adc3-bdfbd8d9306e
+http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=145389372&httpsStatus=1&reqId=969ba290-4b49-11eb-8db2-ebd372233623
+https://kuwo.cn/api/www/music/musicInfo?mid=145389372&httpsStatus=1&reqId=1494ab50-4b4b-11eb-bf9a-f31fbd7b335d
 
 ###播放地址
 https://kuwo.cn/url?format=mp3&rid=155925915&response=url&type=convert_url3&br=128kmp3&from=web&t=1609141904970&httpsStatus=1&reqId=87e511b1-48e1-11eb-adc3-bdfbd8d9306e

@@ -132,7 +132,7 @@ object NeteaseImpl : Impl {
     override fun search(key: String, page: Int, num: Int): MusicResp<List<Song>> {
         return try {
             val resp = post(url = "http://music.163.com/api/cloudsearch/pc",
-                    params = mapOf("s" to key, "offset" to "${page * num - num}", "limit" to "$num", "type" to "1"),
+                    params = mapOf("s" to key, "offset" to "${(page-1) * num}", "limit" to "$num", "type" to "1"),
                     headers = mapOf(
                             "Accept" to "*/*",
                             "Host" to "music.163.com",

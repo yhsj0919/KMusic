@@ -12,7 +12,7 @@ fun main(args: Array<String>) {
     val startTime = System.currentTimeMillis()
     println(startTime)
 
-    val resp = KMusic.search(site = MusicSite.BAIDU,key = songName!!, num = 3,)
+    val resp = KMusic.searchAll(key = songName!!, num = 5)
 
     println(System.currentTimeMillis() - startTime)
 

@@ -138,7 +138,6 @@ object MiguImpl : Impl {
 
                 val songs = songList.map {
                     val songInfo = (it as JSONObject)
-                    println(songInfo)
                     Song(
                         site = "migu",
                         link = "https://music.migu.cn/v3/music/song/${songInfo.getString("copyrightId")}",

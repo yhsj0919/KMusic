@@ -8,7 +8,6 @@ import java.net.URLDecoder
 object DecodeKaiserMatrix {
     fun decode(str: String): String? {
         if (str.isEmpty()) return null
-
         val num = Integer.valueOf(str[0].toString())
         val realStr = str.substring(1)
         val step = realStr.length / num
@@ -29,7 +28,7 @@ object DecodeKaiserMatrix {
 
     private fun makeSense(matrix: List<String>): String? {
         val sb = StringBuilder()
-        for (index in 0 until matrix[0].length) {
+        for (index in matrix[0].indices) {
             for (aMatrix in matrix) {
                 if (aMatrix.length - 1 >= index)
                     sb.append(aMatrix[index])
@@ -45,7 +44,8 @@ object DecodeKaiserMatrix {
     }
 }
 
-//fun main(args: Array<String>) {
-//    val str = "9%8eE%5%1123y1-9c9f%2.t%5E2157F%7%6dd75Fx%2E3F%17a3254cabE%i2F%41546uD%E7b7%c2aF1228E1.t15-f6%5Fm21F8%16mh5E%7f5Emi5522577p_2%594E%1.%218E443k75E61c52n55%61_6%e2E-6c8E"
-//    println(DecodeKaiserMatrix.decode(str))
-//}
+fun main(args: Array<String>) {
+    val str =
+        "9%8eE%5%1123y1-9c9f%2.t%5E2157F%7%6dd75Fx%2E3F%17a3254cabE%i2F%41546uD%E7b7%c2aF1228E1.t15-f6%5Fm21F8%16mh5E%7f5Emi5522577p_2%594E%1.%218E443k75E61c52n55%61_6%e2E-6c8E"
+    println(DecodeKaiserMatrix.decode(str))
+}

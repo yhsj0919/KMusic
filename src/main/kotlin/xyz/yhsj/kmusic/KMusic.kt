@@ -1,6 +1,9 @@
 package xyz.yhsj.kmusic
 
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.Song
 import xyz.yhsj.kmusic.impl.*
@@ -60,14 +63,14 @@ object KMusic {
     fun searchAll(key: String, page: Int = 1, num: Int = 1): MusicResp<List<Song>> {
 
         val results =
-                arrayOf(MusicSite.BAIDU, MusicSite.QQ, MusicSite.NETEASE, MusicSite.KUGOU, MusicSite.KUWO, MusicSite.MIGU)
-                        .future {
-                            search(key, page, num, it)
-                        }
-                        .filter { it.code == 200 }
-                        .flatMap {
-                            it.data!!
-                        }
+            arrayOf(MusicSite.BAIDU, MusicSite.QQ, MusicSite.NETEASE, MusicSite.KUGOU, MusicSite.KUWO, MusicSite.MIGU)
+                .future {
+                    search(key, page, num, it)
+                }
+                .filter { it.code == 200 }
+                .flatMap {
+                    it.data!!
+                }
         return MusicResp.success(data = results)
     }
 }

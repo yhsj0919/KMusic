@@ -1,8 +1,8 @@
 package xyz.yhsj.kmusic.impl
 
-import xyz.yhsj.json.JSONObject
-import xyz.yhsj.json.XML
-import xyz.yhsj.khttp.get
+import khttp.get
+import org.json.JSONObject
+import org.json.XML
 import xyz.yhsj.kmusic.entity.Album
 import xyz.yhsj.kmusic.entity.MusicResp
 import xyz.yhsj.kmusic.entity.MusicTop

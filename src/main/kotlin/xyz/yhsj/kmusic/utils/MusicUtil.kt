@@ -1,6 +1,6 @@
 package xyz.yhsj.kmusic.utils
 
-import xyz.yhsj.json.JSONObject
+import org.json.JSONObject
 
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -39,13 +39,13 @@ object MusicUtil {
         val stringBuffer = StringBuilder(secKey)
         //逆置私钥
         secKey = stringBuffer.reverse().toString()
-        val hex = Hex.byte2HexStr(secKey.toByteArray())
+        val hex = Hex.bytesToHexString(secKey.toByteArray())
         val bigInteger1 = BigInteger(hex, 16)
         val bigInteger2 = BigInteger(pubKey, 16)
         val bigInteger3 = BigInteger(modulus, 16)
         //RSA加密计算
         val bigInteger4 = bigInteger1.pow(bigInteger2.toInt()).remainder(bigInteger3)
-        var encSecKey = Hex.byte2HexStr(bigInteger4.toByteArray())
+        var encSecKey = Hex.bytesToHexString(bigInteger4.toByteArray())
         //字符填充
         encSecKey = zfill(encSecKey, 256)
         val result = HashMap<String, String>()

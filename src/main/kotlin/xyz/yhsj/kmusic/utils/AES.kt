@@ -17,7 +17,7 @@ object AESCryptUtil {
     //   AES/CBC/PKCS5Padding(128)
     //   AES/ECB/NoPadding(128)
     //   AES/ECB/PKCS5Padding(128)
-    private val TRANSFORMATION = "AES/CBC/PKCS5Padding"
+    private val TRANSFORMATION = "AES/ECB/PKCS5Padding"
     private val CRYPT_ALGORITHM = "AES"
 
     private val cipher = Cipher.getInstance(TRANSFORMATION)
@@ -28,10 +28,10 @@ object AESCryptUtil {
         return Base64.encode(cipher.doFinal(originContent.toByteArray()))
     }
 
-    fun decrypt(encryptContent: String, aesKey: String, iv: String): String {
+    fun decrypt(encryptContent: ByteArray, aesKey: String, iv: String): String {
         initCipher(aesKey, Cipher.DECRYPT_MODE, iv)
         // 3、Base64解码 解密后的内容
-        return String(cipher.doFinal(Base64.decode(encryptContent)))
+        return String(cipher.doFinal(encryptContent))
     }
 
     private fun initCipher(aesKey: String, mode: Int, iv: String) {
@@ -54,12 +54,12 @@ object AESCryptUtil {
 
 fun main(args: Array<String>) {
     // 原文
-    val originContent = "测试测试"
-    // 自定义的aes的秘钥
-    val aesKey = "1234567812345678"
-    val aesEncryptContent = AESCryptUtil.encrypt(originContent, aesKey,"0102030405060708")
-    println("原文为：【${originContent}】 进行aes加密后的内容为：【${aesEncryptContent}】")
-
-    val aesDecryptContent = AESCryptUtil.decrypt(aesEncryptContent, aesKey,"0102030405060708")
-    println("秘文为：【${aesEncryptContent}】 进行aes解密后的内容为：【${aesDecryptContent}】")
+//    val originContent = "测试测试"
+//    // 自定义的aes的秘钥
+//    val aesKey = "e82ckenh8dichen8"
+//    val aesEncryptContent = AESCryptUtil.encrypt(originContent, aesKey,"0102030405060708")
+//    println("原文为：【${originContent}】 进行aes加密后的内容为：【${aesEncryptContent}】")
+//
+//    val aesDecryptContent = AESCryptUtil.decrypt(aesEncryptContent, aesKey,"0102030405060708")
+//    println("秘文为：【${aesEncryptContent}】 进行aes解密后的内容为：【${aesDecryptContent}】")
 }

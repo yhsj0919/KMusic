@@ -153,7 +153,7 @@ timestamp=1608617893884&sign=dc5d907a2aa189ffed561b40e6d697d0
 <summary>说明</summary>
 请求头放入authorization,这个是在登录之后返回的
 
-`authorization:access_token ZGU1JTljMjBkOTZmODQyNzQ4N2NzMzQyMzM5YjYxMzM=`
+`authorization:access_token OWI0MzRiYzZmNTEyODQ5ZWY4ZmQ1ZDEyODVlYmE0MjQ=`
 </details>
 
 <details>

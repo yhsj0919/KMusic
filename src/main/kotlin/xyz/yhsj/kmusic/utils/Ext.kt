@@ -52,6 +52,7 @@ fun String.md5(): String = MD5.md5(this)
 
 
 inline fun <reified T> Response.obj(): T {
+    println(this.url)
     return when (T::class.java) {
         String::class.java -> {
             this.text as T

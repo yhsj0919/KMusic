@@ -17,6 +17,7 @@ http://www.kuwo.cn/pc/index/info?apiVer=1
 
 ###搜索单曲
 https://search.kuwo.cn/r.s?pn=0&rn=10&all=薛之谦&ft=music&newsearch=1&alflac=1&itemset=web_2013&client=kt&cluster=0&vermerge=1&rformat=json&encoding=utf8&show_copyright_off=1&pcmp4=1&ver=mbox&plat=pc&vipver=MUSIC_9.1.1.2_BCS2&devid=38668888&newver=1&issubtitle=1&pcjson=1
+
 https://search.kuwo.cn/r.s?pn=0&rn=10&all=薛之谦&ft=music&rformat=json&encoding=utf8&pcjson=1
 
 ###搜索MV

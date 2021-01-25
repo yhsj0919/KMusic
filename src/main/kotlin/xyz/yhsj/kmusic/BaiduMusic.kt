@@ -30,15 +30,20 @@ object BaiduMusic {
         authorization?.let {
             header["authorization"] = "/access_token $authorization"
         }
-        if (!params.containsKey("timestamp")) {
+        val timestamp = if (!params.containsKey("timestamp")) {
+            val time = Date().time
             params["timestamp"] = "${Date().time}"
+            time
+        } else {
+            params["timestamp"]
         }
+
         val sign = sign(params.params())
-        params["sign"] = sign
 
         return if (method == HttpMethod.POST) {
-            post(url = "$baseUrl/$url", params = params, headers = header).obj()
+            post(url = "$baseUrl/$url?sign=$sign&timestamp=$timestamp", data = params, headers = header).obj()
         } else {
+            params["sign"] = sign
             get(url = "$baseUrl/$url", params = params, headers = header).obj()
         }
     }
@@ -294,24 +299,29 @@ object BaiduMusic {
      * @param avatar 头像（可为空，是一个完整的图片路径，上传方式请查看说明文档）
      * @param birth 生日
      * @param nickname 昵称
-     * @param sex 性别（0，女，1，男）
+     * @param sex 性别（0，保密，1，男,2女）
+     * @param intro 简介
      */
     inline fun <reified T> changeAccountInfo(
+        nickname: String,
         age: String,
         avatar: String? = null,
         birth: String,
-        nickname: String,
         sex: String,
+        intro: String? = null,
         authorization: String
     ): T {
         val params = LinkedHashMap<String, String>()
+        params["nickname"] = nickname
         params["age"] = age
         if (!avatar.isNullOrEmpty()) {
             params["avatar"] = avatar
         }
         params["birth"] = birth
-        params["nickname"] = nickname
         params["sex"] = sex
+        intro?.let {
+            params["intro"] = it
+        }
         return baidu(url = "/account/info", method = HttpMethod.POST, params = params, authorization = authorization)
     }
 
@@ -455,9 +465,21 @@ object BaiduMusic {
 
 
 fun main() {
-    val resp = BaiduMusic.accountInfo<JSONObject>(
-//        tsId = "T10053430210",
-        authorization = "NjVhNTMzM2QyZWEyZTlhOTI5OTJiMjZiNWE2YTkwMjY="
+
+//    val resp = BaiduMusic.accountInfo<JSONObject>(
+////        tsId = "T10053430210",
+//        authorization = "OWI0MzRiYzZmNTEyODQ5ZWY4ZmQ1ZDEyODVlYmE0MjQ="
+//    )
+//
+//
+    val resp = BaiduMusic.changeAccountInfo<JSONObject>(
+        age = "25",
+        avatar = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F16%2F99%2F42570527ee4ed5b.jpg&refer=http%3A%2F%2Fbpic.588ku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1614134542&t=9df7b604e83358394235b2ae11999380",
+        birth = "1996-07-14",
+        nickname = "芊芊测试",
+        sex = "2",
+        intro = "账号测试",
+        authorization = "OWI0MzRiYzZmNTEyODQ5ZWY4ZmQ1ZDEyODVlYmE0MjQ="
     )
 
     println(resp)

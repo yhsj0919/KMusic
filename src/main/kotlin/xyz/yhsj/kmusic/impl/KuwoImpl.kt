@@ -307,7 +307,6 @@ object KuwoImpl : Impl {
      * 根据id获取歌曲，部分接口支持获取多个，id用“，”分开
      */
     override fun getSongById(songIds: List<String>): MusicResp<List<Song>> {
-        //使用携程并发加载
         val songs: List<Song> =
             songIds.future { songId ->
                 try {

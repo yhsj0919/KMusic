@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RedisConfiguration">
+    <option name="serverConfigurations">
+      <list>
+        <ServerConfiguration>
+          <option name="databaseVendor" value="DatabaseVendor{name='RedisDB'}" />
+          <option name="defaultKeyFilter" value="*" />
+          <option name="label" value="http://49.235.94.208/" />
+          <option name="password" value="" />
+          <option name="sercurityInfo">
+            <SercurityInfo>
+              <option name="sshUsePassword" value="true" />
+            </SercurityInfo>
+          </option>
+          <option name="serverUrl" value="49.235.94.208:6379" />
+        </ServerConfiguration>
+      </list>
+    </option>
+  </component>
+</project>

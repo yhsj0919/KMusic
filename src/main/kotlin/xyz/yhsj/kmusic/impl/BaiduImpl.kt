@@ -118,11 +118,11 @@ object BaiduImpl : Impl {
         return try {
 
             val time = Date().time / 1000
-            val params = "pageNo=$page&pageSize=$num&timestamp=$time&type=1&word=$key"
+            val params = "appid=16073360&pageNo=$page&pageSize=$num&timestamp=$time&type=1&word=$key"
             val sign = sign(params)
 
             //https://music.taihe.com/v1/search?sign=fa717a728981421efcda2482a67235a3&word=薛之谦&timestamp=1607563076
-            //https://api-qianqian.taihe.com/v1/search?pageNo=1&pageSize=20&timestamp=1608106922425&type=1&word=薛之谦&sign=d8de29b0be45085625cc75cefa3f4858
+            //https://api-qianqian.taihe.com/v1/search?appid=16073360&pageNo=1&pageSize=20&timestamp=1617867169135&type=1&word=薛之谦&sign=b753beb74dd137cb8f74f669ec6ab8ce
             val resp = get(
                 url = "https://api-qianqian.taihe.com/v1/search?$params&sign=$sign",
                 headers = mapOf(
@@ -156,9 +156,9 @@ object BaiduImpl : Impl {
         val songs: List<Song> =
             songIds.future { songId ->
                 try {
-                    //https://api-qianqian.taihe.com/v1/song/tracklink?TSID=T10058207752&timestamp=1608111856885&sign=c5cfb06258c4ca3d326680873ba7df6f
+                    //https://api-qianqian.taihe.com/v1/song/tracklink?TSID=T10058207752&appid=16073360&timestamp=1617867503482&sign=4839b4d8f581b4eb3f7adcb192bbfe42
                     val time = Date().time / 1000
-                    val params = "TSID=$songId&timestamp=$time"
+                    val params = "TSID=$songId&appid=16073360&rate=320&timestamp=$time"
                     val sign = sign(params)
 
                     val songResp = get(
@@ -179,7 +179,7 @@ object BaiduImpl : Impl {
 
                         val songInfo = songResp.jsonObject
 
-//                        println(songInfo)
+                        println(songInfo)
 
                         Song(
                             site = "baidu",

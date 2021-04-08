@@ -16,23 +16,23 @@ import kotlin.collections.LinkedHashMap
 object BaiduMusic {
     const val baseUrl = "https://api-qianqian.taihe.com/v1"
     val header = hashMapOf(
-        "app-version" to "v8.2.3.1",
-        "from" to "android",
-        "user-agent" to "Mozilla/5.0 (Linux; U; Android 8.0.0; zh-cn; MI 5 Build/OPR1.170623.032) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
+            "app-version" to "v8.2.3.1",
+            "from" to "android",
+            "user-agent" to "Mozilla/5.0 (Linux; U; Android 8.0.0; zh-cn; MI 5 Build/OPR1.170623.032) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
     )
 
     inline fun <reified T> baidu(
-        url: String,
-        method: HttpMethod = HttpMethod.GET,
-        params: LinkedHashMap<String, String> = LinkedHashMap(),
-        authorization: String? = null
+            url: String,
+            method: HttpMethod = HttpMethod.GET,
+            params: LinkedHashMap<String, String> = LinkedHashMap(),
+            authorization: String? = null
     ): T {
         authorization?.let {
             header["authorization"] = "/access_token $authorization"
         }
         val timestamp = if (!params.containsKey("timestamp")) {
             val time = Date().time
-            params["timestamp"] = "${Date().time}"
+            params["timestamp"] = "$time"
             time
         } else {
             params["timestamp"]
@@ -123,10 +123,10 @@ object BaiduMusic {
      * @param artistRegion 地区(内地、港台、欧美、韩国、日本、其他),值是写死的,这个不传不分页
      */
     inline fun <reified T> artistList(
-        artistGender: String? = null,
-        artistRegion: String? = null,
-        page: Int = 1,
-        size: Int = 20
+            artistGender: String? = null,
+            artistRegion: String? = null,
+            page: Int = 1,
+            size: Int = 20
     ): T {
         val params = LinkedHashMap<String, String>()
         if (!artistGender.isNullOrEmpty()) {
@@ -180,17 +180,17 @@ object BaiduMusic {
     inline fun <reified T> search(type: Int, word: String, page: Int = 1, size: Int = 20): T {
         val params = if (type != 0) {
             linkedMapOf(
-                "timestamp" to "${Date().time}",
-                "type" to "$type",
-                "word" to word,
+                    "timestamp" to "${Date().time}",
+                    "type" to "$type",
+                    "word" to word,
             )
         } else {
             linkedMapOf(
-                "pageNo" to "$page",
-                "pageSize" to "$size",
-                "timestamp" to "${Date().time}",
-                "type" to "$type",
-                "word" to word,
+                    "pageNo" to "$page",
+                    "pageSize" to "$size",
+                    "timestamp" to "${Date().time}",
+                    "type" to "$type",
+                    "word" to word,
             )
         }
         return baidu(url = "/search", params = params)
@@ -257,8 +257,8 @@ object BaiduMusic {
      */
     inline fun <reified T> sendSms(phone: String): T {
         val params = linkedMapOf(
-            "phone" to phone,
-            "randstr" to "@arV",
+                "phone" to phone,
+                "randstr" to "@arV",
         )
         return baidu(url = "/oauth/send_sms", params = params, method = HttpMethod.POST)
     }
@@ -271,8 +271,8 @@ object BaiduMusic {
      */
     inline fun <reified T> login(phone: String, code: String): T {
         val params = linkedMapOf(
-            "code" to code,
-            "phone" to phone,
+                "code" to code,
+                "phone" to phone,
         )
         return baidu(url = "/oauth/login", params = params, method = HttpMethod.POST)
     }
@@ -303,13 +303,13 @@ object BaiduMusic {
      * @param intro 简介
      */
     inline fun <reified T> changeAccountInfo(
-        nickname: String,
-        age: String,
-        avatar: String? = null,
-        birth: String,
-        sex: String,
-        intro: String? = null,
-        authorization: String
+            nickname: String,
+            age: String,
+            avatar: String? = null,
+            birth: String,
+            sex: String,
+            intro: String? = null,
+            authorization: String
     ): T {
         val params = LinkedHashMap<String, String>()
         params["nickname"] = nickname
@@ -364,10 +364,10 @@ object BaiduMusic {
     inline fun <reified T> favoriteSongCreate(code: String, authorization: String): T {
         val params = linkedMapOf("code" to code)
         return baidu(
-            url = "/favorite/song/create",
-            params = params,
-            method = HttpMethod.POST,
-            authorization = authorization
+                url = "/favorite/song/create",
+                params = params,
+                method = HttpMethod.POST,
+                authorization = authorization
         )
     }
 
@@ -377,10 +377,10 @@ object BaiduMusic {
     inline fun <reified T> favoriteSongDelete(code: String, authorization: String): T {
         val params = linkedMapOf("code" to code)
         return baidu(
-            url = "/favorite/song/delete",
-            params = params,
-            method = HttpMethod.POST,
-            authorization = authorization
+                url = "/favorite/song/delete",
+                params = params,
+                method = HttpMethod.POST,
+                authorization = authorization
         )
     }
 
@@ -399,10 +399,10 @@ object BaiduMusic {
     inline fun <reified T> favoriteTrackListCreate(code: String, authorization: String): T {
         val params = linkedMapOf("code" to code)
         return baidu(
-            url = "/favorite/tracklist/create",
-            params = params,
-            method = HttpMethod.POST,
-            authorization = authorization
+                url = "/favorite/tracklist/create",
+                params = params,
+                method = HttpMethod.POST,
+                authorization = authorization
         )
     }
 
@@ -412,10 +412,10 @@ object BaiduMusic {
     inline fun <reified T> favoriteTrackListDelete(code: String, authorization: String): T {
         val params = linkedMapOf("code" to code)
         return baidu(
-            url = "/favorite/tracklist/delete",
-            params = params,
-            method = HttpMethod.POST,
-            authorization = authorization
+                url = "/favorite/tracklist/delete",
+                params = params,
+                method = HttpMethod.POST,
+                authorization = authorization
         )
     }
 
@@ -434,10 +434,10 @@ object BaiduMusic {
     inline fun <reified T> favoriteArtistCreate(code: String, authorization: String): T {
         val params = linkedMapOf("code" to code)
         return baidu(
-            url = "/favorite/artist/create",
-            params = params,
-            method = HttpMethod.POST,
-            authorization = authorization
+                url = "/favorite/artist/create",
+                params = params,
+                method = HttpMethod.POST,
+                authorization = authorization
         )
     }
 
@@ -447,10 +447,10 @@ object BaiduMusic {
     inline fun <reified T> favoriteArtistDelete(code: String, authorization: String): T {
         val params = linkedMapOf("code" to code)
         return baidu(
-            url = "/favorite/artist/delete",
-            params = params,
-            method = HttpMethod.POST,
-            authorization = authorization
+                url = "/favorite/artist/delete",
+                params = params,
+                method = HttpMethod.POST,
+                authorization = authorization
         )
     }
 
@@ -473,13 +473,13 @@ fun main() {
 //
 //
     val resp = BaiduMusic.changeAccountInfo<JSONObject>(
-        age = "25",
-        avatar = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F16%2F99%2F42570527ee4ed5b.jpg&refer=http%3A%2F%2Fbpic.588ku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1614134542&t=9df7b604e83358394235b2ae11999380",
-        birth = "1996-07-14",
-        nickname = "芊芊测试",
-        sex = "2",
-        intro = "账号测试",
-        authorization = "OWI0MzRiYzZmNTEyODQ5ZWY4ZmQ1ZDEyODVlYmE0MjQ="
+            age = "25",
+            avatar = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.588ku.com%2Felement_origin_min_pic%2F01%2F16%2F99%2F42570527ee4ed5b.jpg&refer=http%3A%2F%2Fbpic.588ku.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1614134542&t=9df7b604e83358394235b2ae11999380",
+            birth = "1996-07-14",
+            nickname = "芊芊测试",
+            sex = "2",
+            intro = "账号测试",
+            authorization = "OWI0MzRiYzZmNTEyODQ5ZWY4ZmQ1ZDEyODVlYmE0MjQ="
     )
 
     println(resp)

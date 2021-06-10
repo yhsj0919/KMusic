@@ -1,6 +1,7 @@
 # KMusic
 
 ## 该代码仅作技术交流,切勿用作商业用途
+## flutter版本请前往[kmusic_api](https://github.com/yhsj0919/kmusic_api),接口更全
 
 ### 音乐网站api
 - 音乐解析部分来自 [musicdl](https://github.com/CharlesPikachu/musicdl) ,部分为个人整理
